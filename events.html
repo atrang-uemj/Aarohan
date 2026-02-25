@@ -593,6 +593,9 @@
         <p style="margin-top:1rem;font-size:0.75rem;opacity:0.5;">© 2026 UEM Jaipur. All rights reserved.</p>
     </footer>
 
+    <!-- EmailJS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
     <!-- ===== FIREBASE + LOGIC ===== -->
     <script type="module">
         import { auth, db } from './firebase.js';
@@ -600,6 +603,39 @@
         import {
             collection, addDoc, query, where, getDocs, serverTimestamp
         } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // ================================================================
+        //  EMAILJS CONFIG  ← fill these in from emailjs.com dashboard
+        // ================================================================
+        const EJS_PUBLIC_KEY = 'tGvAEHBuhmkrIulmM';   // Account → API Keys
+        const EJS_SERVICE_ID = 'service_sldlt1l';           // Email Services tab
+        const EJS_TEMPLATE_ID = 'template_iosnd4l';          // Email Templates tab
+
+        // Init once
+        if (window.emailjs) emailjs.init({ publicKey: EJS_PUBLIC_KEY });
+
+        /**
+         * sendConfirmationEmail
+         * Sends event-registration confirmation to every member's stored email.
+         * Fails silently so it never blocks the UI.
+         */
+        async function sendConfirmationEmail({ toEmail, toName, eventName, gatePassID, teamName, memberList }) {
+            if (!window.emailjs || EJS_PUBLIC_KEY === 'YOUR_EMAILJS_PUBLIC_KEY') return;
+            try {
+                await emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, {
+                    to_email: toEmail,
+                    to_name: toName,
+                    event_name: eventName,
+                    gate_pass_id: gatePassID,
+                    team_name: teamName || '—',
+                    member_list: memberList || toName,
+                    fest_name: 'Aarohan 1.0',
+                    fest_venue: 'UEM Jaipur',
+                });
+            } catch (e) {
+                console.warn('[EmailJS] Failed to send email:', e.message);
+            }
+        }
 
         // ================================================================
         //  EVENT DEFINITIONS
@@ -615,18 +651,27 @@
 
         let currentUser = null;
         let currentEvent = null;
+        let currentUserPass = null;   // cached { gatePassID, name, college } for logged-in user
         let soloVerifiedData = null;   // { name, college } after verify
         let memberVerifiedMap = {};    // rowId → { gatePassID, name, college }
         let memberRowCount = 0;
 
         // ── Auth state ──
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             if (user) {
                 document.getElementById('navLoginBtn').style.display = 'none';
                 document.getElementById('navDashBtn').style.display = 'inline';
                 document.getElementById('navRegBtn').textContent = 'My Pass';
                 document.getElementById('navRegBtn').onclick = () => location.href = 'dashboard.html';
+
+                // Pre-fetch this user's gate pass so solo modals can auto-fill
+                try {
+                    const identifier = user.email || user.uid;
+                    const q = query(collection(db, 'participants'), where('email', '==', identifier));
+                    const snap = await getDocs(q);
+                    if (!snap.empty) currentUserPass = snap.docs[0].data();
+                } catch (_) { /* silently skip */ }
             } else {
                 document.getElementById('loginBanner').style.display = 'block';
             }
@@ -658,11 +703,38 @@
             if (ev.type === 'solo') {
                 soloDiv.style.display = 'block';
                 groupDiv.style.display = 'none';
-                document.getElementById('modalSub').textContent = 'Enter your Aarohan Gate Pass ID to register.';
-                document.getElementById('soloAarohanId').value = '';
-                document.getElementById('soloVerified').className = 'member-verified';
-                document.getElementById('soloError').className = 'member-error';
-                document.getElementById('soloVerifyBtn').disabled = false;
+
+                const idInput = document.getElementById('soloAarohanId');
+                const verDiv = document.getElementById('soloVerified');
+                const errDiv = document.getElementById('soloError');
+                const verBtn = document.getElementById('soloVerifyBtn');
+
+                // Reset
+                idInput.value = '';
+                verDiv.className = 'member-verified';
+                errDiv.className = 'member-error';
+                verBtn.disabled = false;
+                verBtn.textContent = 'Verify';
+                soloVerifiedData = null;
+
+                if (currentUserPass) {
+                    // Auto-fill & auto-verify
+                    idInput.value = currentUserPass.gatePassID;
+                    idInput.readOnly = true;
+                    verBtn.style.display = 'none';   // hide — no need to manually verify
+                    soloVerifiedData = currentUserPass;
+                    verDiv.textContent = `✓ ${currentUserPass.name} — ${currentUserPass.college}`;
+                    verDiv.classList.add('show');
+                    document.getElementById('modalSub').textContent = 'Your Aarohan ID has been detected automatically.';
+                } else {
+                    // No gate pass yet — nudge them
+                    idInput.readOnly = false;
+                    verBtn.style.display = 'inline-flex';
+                    document.getElementById('modalSub').textContent =
+                        '⚠ You need a Gate Pass first. Get one from your Dashboard, then come back here.';
+                    errDiv.textContent = '👉 Go to Dashboard → Register → then return here to join this event.';
+                    errDiv.classList.add('show');
+                }
             } else {
                 soloDiv.style.display = 'none';
                 groupDiv.style.display = 'block';
@@ -674,7 +746,24 @@
                 const startWith = Math.max(2, ev.min);
                 for (let i = 0; i < startWith; i++) addMemberRow();
                 updateAddMemberBtn();
+
+                // Auto-fill Member 1 with the registering user's Aarohan ID
+                if (currentUserPass) {
+                    const firstRowId = 1;   // memberRowCount starts at 0, first addMemberRow makes id=1
+                    const inp = document.getElementById(`mid-${firstRowId}`);
+                    const vDiv = document.getElementById(`mverified-${firstRowId}`);
+                    const vBtn = document.getElementById(`mvbtn-${firstRowId}`);
+                    if (inp) {
+                        inp.value = currentUserPass.gatePassID;
+                        inp.readOnly = true;
+                        if (vBtn) vBtn.style.display = 'none';
+                        memberVerifiedMap[firstRowId] = currentUserPass;
+                        vDiv.textContent = `✓ ${currentUserPass.name} — ${currentUserPass.college}`;
+                        vDiv.classList.add('show');
+                    }
+                }
             }
+
 
             document.getElementById('regModal').classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -855,13 +944,13 @@
                     }
                     members = [soloVerifiedData];
 
-                    // Duplicate check: same person + same event
-                    const dup = await getDocs(
+                    // Duplicate check — single-field query (no composite index needed)
+                    const dupSnap = await getDocs(
                         query(collection(db, 'eventRegistrations'),
-                            where('event', '==', currentEvent),
                             where('leadGatePassID', '==', soloVerifiedData.gatePassID))
                     );
-                    if (!dup.empty) {
+                    const alreadyRegistered = dupSnap.docs.some(d => d.data().event === currentEvent);
+                    if (alreadyRegistered) {
                         showModalMsg('error', `You are already registered for ${currentEvent}.`);
                         btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
                     }
@@ -875,7 +964,15 @@
                         timestamp: serverTimestamp()
                     });
 
-                    showModalMsg('success', `✦ Registered for ${currentEvent}! See you on stage, ${soloVerifiedData.name}.`);
+                    // Send confirmation email
+                    sendConfirmationEmail({
+                        toEmail: currentUser.email,
+                        toName: soloVerifiedData.name,
+                        eventName: currentEvent,
+                        gatePassID: soloVerifiedData.gatePassID,
+                    });
+
+                    showModalMsg('success', `❆ Registered for ${currentEvent}! A confirmation email has been sent.`);
                     setTimeout(closeModal, 2600);
 
                     // ---- Group ----
@@ -901,13 +998,13 @@
 
                     const leadId = members[0].gatePassID;
 
-                    // Duplicate check: same team lead + same event
-                    const dup = await getDocs(
+                    // Duplicate check — single-field query (no composite index needed)
+                    const dupSnap = await getDocs(
                         query(collection(db, 'eventRegistrations'),
-                            where('event', '==', currentEvent),
                             where('leadGatePassID', '==', leadId))
                     );
-                    if (!dup.empty) {
+                    const alreadyRegistered = dupSnap.docs.some(d => d.data().event === currentEvent);
+                    if (alreadyRegistered) {
                         showModalMsg('error', `This team is already registered for ${currentEvent}.`);
                         btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
                     }
@@ -923,7 +1020,21 @@
                         timestamp: serverTimestamp()
                     });
 
-                    showModalMsg('success', `✦ "${teamName}" registered for ${currentEvent}! All the best!`);
+                    // Send confirmation email to each verified member who has an email stored
+                    const memberNames = members.map(m => m.name).join(', ');
+                    for (const m of members) {
+                        const memberEmail = m.email || currentUser.email;
+                        sendConfirmationEmail({
+                            toEmail: memberEmail,
+                            toName: m.name,
+                            eventName: currentEvent,
+                            gatePassID: m.gatePassID,
+                            teamName: teamName,
+                            memberList: memberNames,
+                        });
+                    }
+
+                    showModalMsg('success', `❆ "${teamName}" registered for ${currentEvent}! Confirmation emails sent to all members.`);
                     setTimeout(closeModal, 2600);
                 }
 

@@ -82,6 +82,134 @@
             pointer-events: none;
             font-size: 0.85rem;
         }
+
+        /* ===== REGISTERED EVENTS SECTION ===== */
+        .my-events-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .my-events-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.08em;
+            color: var(--gold-light);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(212, 165, 32, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .my-events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .my-event-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(212, 165, 32, 0.12);
+            border-left: 3px solid var(--gold);
+            padding: 1.1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .my-event-card:hover {
+            background: rgba(212, 165, 32, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .my-event-top {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .my-event-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .my-event-name {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+            color: var(--gold-light);
+        }
+
+        .my-event-team {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .my-event-pass {
+            display: inline-block;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--gold);
+            background: rgba(212, 165, 32, 0.08);
+            border: 1px solid rgba(212, 165, 32, 0.2);
+            padding: 0.2rem 0.6rem;
+            align-self: flex-start;
+        }
+
+        .my-event-type {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.15rem 0.5rem;
+            border: 1px solid;
+            align-self: flex-start;
+        }
+
+        .type-solo {
+            color: #7dd3fc;
+            border-color: rgba(125, 211, 252, 0.3);
+            background: rgba(125, 211, 252, 0.06);
+        }
+
+        .type-group {
+            color: #c084fc;
+            border-color: rgba(192, 132, 252, 0.3);
+            background: rgba(192, 132, 252, 0.06);
+        }
+
+        .my-events-empty {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-style: italic;
+            padding: 1.5rem;
+            border: 1px dashed rgba(212, 165, 32, 0.15);
+            text-align: center;
+        }
+
+        .my-events-loading {
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        @media (max-width: 640px) {
+            .my-events-section {
+                padding: 0 1rem 3rem;
+            }
+
+            .my-events-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
@@ -314,6 +442,18 @@
             </div><!-- /right -->
 
         </div><!-- /grid -->
+
+        <!-- ===== MY REGISTERED EVENTS ===== -->
+        <div class="my-events-section" id="myEventsSection" style="display:none;">
+            <h2 class="my-events-title">✦ My Registered Events</h2>
+            <div id="myEventsContent">
+                <div class="my-events-loading">
+                    <span class="spinner" style="width:14px;height:14px;border-width:2px;"></span>
+                    Loading your events...
+                </div>
+            </div>
+        </div>
+
     </div><!-- /dashboardContent -->
 
     <!-- SUCCESS OVERLAY -->
@@ -390,6 +530,7 @@
             if (user.displayName) document.getElementById('regName').value = user.displayName;
 
             await checkExistingRegistration(user.email || user.uid);
+            await loadMyEvents(user.email || user.uid);
         });
 
         /* ---- Check existing registration ---- */
@@ -404,6 +545,85 @@
                 }
             } catch (err) {
                 console.warn('Could not check existing registration:', err.message);
+            }
+        }
+
+        /* ---- Load registered events ---- */
+        const EVENT_ICONS = {
+            'Solo Singing': '🎤', 'Solo Dance': '💃',
+            'Band': '🎸', 'Group Dance': '🕺',
+            'T-Shirt Painting': '🎨', 'Nukkad Natak': '🎭'
+        };
+
+        async function loadMyEvents(identifier) {
+            const section = document.getElementById('myEventsSection');
+            const container = document.getElementById('myEventsContent');
+            section.style.display = 'block';
+
+            try {
+                // Fetch by leadGatePassID (solo) — first get gatePassID
+                const pSnap = await getDocs(
+                    query(collection(db, 'participants'), where('email', '==', identifier))
+                );
+                if (pSnap.empty) {
+                    container.innerHTML = `<div class="my-events-empty">🎟 Register and get your Gate Pass first, then sign up for events from the <a href="events.html" style="color:var(--gold);">Events page</a>.</div>`;
+                    return;
+                }
+
+                const gatePassID = pSnap.docs[0].data().gatePassID;
+
+                // Fetch all registrations where user is lead OR a member
+                const leadSnap = await getDocs(
+                    query(collection(db, 'eventRegistrations'),
+                        where('leadGatePassID', '==', gatePassID))
+                );
+
+                // Also check if they appear as a non-lead member
+                const memberSnap = await getDocs(
+                    query(collection(db, 'eventRegistrations'),
+                        where('members', 'array-contains', { gatePassID, ...pSnap.docs[0].data() }))
+                );
+
+                // Merge, deduplicate by doc ID
+                const seen = new Set();
+                const allDocs = [];
+                [...leadSnap.docs, ...memberSnap.docs].forEach(d => {
+                    if (!seen.has(d.id)) { seen.add(d.id); allDocs.push(d); }
+                });
+
+                if (allDocs.length === 0) {
+                    container.innerHTML = `<div class="my-events-empty">No events registered yet. Head to the <a href="events.html" style="color:var(--gold);">Events page</a> to sign up!</div>`;
+                    return;
+                }
+
+                const grid = document.createElement('div');
+                grid.className = 'my-events-grid';
+
+                allDocs.forEach(d => {
+                    const ev = d.data();
+                    const icon = EVENT_ICONS[ev.event] || '🎭';
+                    const isGroup = ev.type === 'group';
+                    const teamLine = isGroup && ev.teamName
+                        ? `<div class="my-event-team">Team: ${ev.teamName} &nbsp;·&nbsp; ${ev.memberCount || '?'} members</div>`
+                        : '';
+                    grid.innerHTML += `
+                        <div class="my-event-card">
+                            <div class="my-event-top">
+                                <span class="my-event-icon">${icon}</span>
+                                <span class="my-event-name">${ev.event}</span>
+                            </div>
+                            <span class="my-event-type ${isGroup ? 'type-group' : 'type-solo'}">${isGroup ? 'Group' : 'Solo'}</span>
+                            ${teamLine}
+                            <span class="my-event-pass">${gatePassID}</span>
+                        </div>`;
+                });
+
+                container.innerHTML = '';
+                container.appendChild(grid);
+
+            } catch (err) {
+                console.warn('Could not load events:', err.message);
+                container.innerHTML = `<div class="my-events-empty">Could not load registered events. Please refresh.</div>`;
             }
         }
 
