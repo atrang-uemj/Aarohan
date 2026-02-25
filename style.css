@@ -1789,9 +1789,12 @@ footer .footer-logo {
 }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE — Mobile-First
    ============================================================ */
+
+/* ======== Tablet (≤900px) ======== */
 @media (max-width: 900px) {
+
     .about-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -1800,17 +1803,39 @@ footer .footer-logo {
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
+
+    .events-6-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .event-pills {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Info bar wraps */
+    .info-bar {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding: 1rem 1.25rem;
+    }
 }
 
-@media (max-width: 700px) {
+/* ======== Phone (≤640px) ======== */
+@media (max-width: 640px) {
+
+    /* --- Navbar --- */
     .navbar {
-        padding: 0.9rem 1.25rem;
+        padding: 0.85rem 1rem;
     }
 
     .nav-links {
         display: none;
         position: fixed;
-        top: 58px;
+        top: 56px;
         left: 0;
         right: 0;
         bottom: 0;
@@ -1818,62 +1843,327 @@ footer .footer-logo {
         background: rgba(3, 3, 5, 0.97);
         backdrop-filter: blur(24px);
         padding: 2rem 1.5rem;
-        gap: 1.5rem;
+        gap: 1.75rem;
         justify-content: flex-start;
-        border-bottom: 1px solid rgba(212, 165, 32, 0.1);
         overflow-y: auto;
+        z-index: 999;
     }
 
     .nav-links.open {
         display: flex;
     }
 
+    .nav-links a {
+        font-size: 1rem;
+        letter-spacing: 0.1em;
+    }
+
     .hamburger {
         display: flex;
     }
 
+    /* --- Hero --- */
+    .hero {
+        padding: 5.5rem 1rem 4rem;
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 18vw, 5.5rem);
+        letter-spacing: 0.15em;
+    }
+
+    .hero-version {
+        font-size: clamp(1.1rem, 6vw, 2rem);
+        letter-spacing: 0.8em;
+    }
+
+    .hero-tagline {
+        font-size: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .hero-subtitle-top {
+        font-size: 0.88rem;
+        padding: 0 0.5rem;
+    }
+
+    .hero-badge {
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        padding: 0.35rem 1rem;
+    }
+
     .hero-cta {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        margin-bottom: 3rem;
+        gap: 0.75rem;
     }
 
     .btn-lg {
         width: 100%;
-        max-width: 320px;
-    }
-
-    .auth-card {
-        padding: 2rem 1.25rem;
-    }
-
-    .dashboard-page {
-        padding: 5.5rem 1rem 3rem;
-    }
-
-    .pass-info-row {
-        flex-direction: column;
+        text-align: center;
+        padding: 1rem 1.5rem;
     }
 
     .ring-2,
     .ring-3 {
         display: none;
     }
-}
 
-@media (max-width: 480px) {
-    section {
-        padding: 4rem 1rem;
+    .ring-1 {
+        width: 300px;
+        height: 200px;
+    }
+
+    .scroll-indicator {
+        display: none;
+    }
+
+    /* --- Countdown --- */
+    .countdown-grid {
+        gap: 0.5rem;
     }
 
     .countdown-box {
         min-width: 68px;
+        padding: 0.9rem 0.6rem;
     }
 
     .countdown-number {
-        font-size: 1.9rem;
+        font-size: 1.8rem;
     }
 
-    .event-pills {
+    /* --- Info bar --- */
+    .info-bar {
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 1.25rem 1rem;
+        text-align: center;
+    }
+
+    .info-item {
+        justify-content: center;
+    }
+
+    /* --- Sections --- */
+    section {
+        padding: 3.5rem 1rem;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+    }
+
+    .stat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .stat-number {
+        font-size: 2.2rem;
+    }
+
+    /* Home event cards — single column */
+    .events-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* --- Auth / Login --- */
+    .auth-page {
+        padding: 5rem 0.75rem 2rem;
+    }
+
+    .auth-card {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .auth-logo-text {
+        font-size: 1.7rem;
+    }
+
+    /* --- Dashboard --- */
+    .dashboard-page {
+        padding: 5rem 0.85rem 3rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .dashboard-name {
+        font-size: 1.6rem;
+    }
+
+    .logout-area {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .reg-card {
+        padding: 1.5rem 1rem;
+    }
+
+    /* --- Gate Pass (mobile) --- */
+    .gate-pass {
+        padding: 1.25rem 1rem;
+    }
+
+    .pass-fest-name {
+        font-size: 1.5rem;
+        letter-spacing: 0.2em;
+    }
+
+    .pass-fest-sub {
+        font-size: 0.6rem;
+    }
+
+    .pass-info-row {
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .qr-container {
+        align-self: center;
+    }
+
+    .pass-id {
+        font-size: 1rem;
+        letter-spacing: 0.15em;
+    }
+
+    .pass-field-value {
+        font-size: 0.88rem;
+    }
+
+    .founding-badge {
+        font-size: 0.58rem;
+        padding: 0.25rem 0.6rem;
+    }
+
+    /* --- Events page --- */
+    .events-6-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .events-section {
+        padding: 0 1rem 3rem;
+    }
+
+    .ev-card {
+        padding: 1.5rem;
+    }
+
+    .page-hero {
+        padding: 5.5rem 1rem 2.5rem;
+    }
+
+    .page-hero h1 {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    /* --- Registration modal (full-screen on phone) --- */
+    .modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .modal-card {
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 1.75rem 1.25rem 2rem;
+    }
+
+    .modal-ev-name {
+        font-size: 1.1rem;
+    }
+
+    /* Member verify row — stack on mobile */
+    .member-id-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .verify-id-btn {
+        width: 100%;
+    }
+
+    /* --- Footer --- */
+    footer {
+        padding: 2.5rem 1rem;
+    }
+
+    .footer-logo {
+        font-size: 1.5rem;
+    }
+
+    /* --- Success overlay --- */
+    .success-box {
+        padding: 2rem 1.25rem;
+        margin: 1rem;
+    }
+
+    /* --- Forms --- */
+    .form-input,
+    .form-select {
+        font-size: 0.95rem;
+        padding: 0.8rem 0.9rem;
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+    }
+
+    .btn-full {
+        padding: 0.9rem 1rem;
+    }
+}
+
+/* ======== Small phones (≤380px) ======== */
+@media (max-width: 380px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-version {
+        font-size: 1rem;
+        letter-spacing: 0.6em;
+    }
+
+    .countdown-box {
+        min-width: 58px;
+        padding: 0.75rem 0.4rem;
+    }
+
+    .countdown-number {
+        font-size: 1.5rem;
+    }
+
+    .auth-logo-text {
+        font-size: 1.4rem;
+    }
+
+    .dashboard-name {
+        font-size: 1.3rem;
+    }
+
+    .pass-fest-name {
+        font-size: 1.2rem;
+    }
+
+    .stat-grid {
         grid-template-columns: 1fr 1fr;
     }
 }
