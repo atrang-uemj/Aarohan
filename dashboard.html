@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Aarohan 1.0</title>
+    <meta name="description" content="Your Aarohan 1.0 dashboard — register and get your gate pass." />
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- QR Code CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- html2canvas for download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        .gate-pass {
+            animation: glowCinematic 4s ease-in-out infinite;
+        }
+
+        #downloadBtn {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        /* College logo on gate pass */
+        .pass-college-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
+            object-fit: contain;
+            background: #fff;
+            padding: 3px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .pass-college-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        /* Registered card */
+        .registered-card-inner {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .reg-pass-id-big {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--grad-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+        }
+
+        .reg-summary-box {
+            padding: 1rem 1.5rem;
+            background: rgba(212, 165, 32, 0.05);
+            border: 1px solid rgba(212, 165, 32, 0.2);
+            margin: 1.25rem 0;
+        }
+
+        /* College select */
+        .college-select-wrapper {
+            position: relative;
+        }
+
+        .college-select-wrapper::after {
+            content: '▾';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
+            pointer-events: none;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">AAROHAN</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="dashboard.html" class="active">Dashboard</a></li>
+            <li><button class="btn btn-outline btn-sm" id="logoutNavBtn">Logout</button></li>
+        </ul>
+    </nav>
+
+    <!-- AUTH LOADING -->
+    <div id="authLoading"
+        style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:1;">
+        <div class="spinner" style="width:36px;height:36px;border-width:3px;"></div>
+        <p
+            style="margin-top:1rem;color:var(--text-muted);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;">
+            Loading your dashboard...</p>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div class="dashboard-page hidden" id="dashboardContent">
+
+        <!-- Header -->
+        <div class="logout-area">
+            <div class="dashboard-header">
+                <p class="dashboard-greeting">✦ Welcome, Performer</p>
+                <h1 class="dashboard-name gradient-text" id="userName">—</h1>
+                <p class="dashboard-email" id="userEmail">—</p>
+            </div>
+            <button class="btn btn-outline" id="logoutMainBtn">🚪 Logout</button>
+        </div>
+
+        <!-- GRID -->
+        <div class="dashboard-grid">
+
+            <!-- ===== LEFT: REGISTRATION FORM ===== -->
+            <div>
+
+                <!-- Form card -->
+                <div class="glass-card reg-card" id="regCard" style="cursor:default;">
+                    <h2 class="reg-title">Register for Aarohan 1.0</h2>
+                    <p class="reg-sub">Enter your details below and receive your official digital gate pass.</p>
+
+                    <div class="error-msg" id="regError"></div>
+
+                    <!-- Full name -->
+                    <div class="form-group">
+                        <label class="form-label" for="regName">Full Name</label>
+                        <input class="form-input" type="text" id="regName" placeholder="Your full name" required />
+                    </div>
+
+                    <!-- College dropdown -->
+                    <div class="form-group">
+                        <label class="form-label" for="regCollege">College / Institution</label>
+                        <div class="college-select-wrapper">
+                            <select class="form-select" id="regCollege" required>
+                                <option value="" disabled selected>— Select your college —</option>
+
+                                <optgroup label="Central Institutions">
+                                    <option value="MNIT Jaipur" data-domain="mnit.ac.in">MNIT Jaipur (Malaviya NIT)
+                                    </option>
+                                </optgroup>
+
+                                <optgroup label="Deemed / Private Universities">
+                                    <option value="UEM Jaipur" data-domain="uem.edu.in">UEM Jaipur (Host College)
+                                    </option>
+                                    <option value="Manipal University Jaipur" data-domain="jaipur.manipal.edu">Manipal
+                                        University Jaipur</option>
+                                    <option value="LNMIIT Jaipur" data-domain="lnmiit.ac.in">LNMIIT Jaipur</option>
+                                    <option value="Jaipur National University" data-domain="jnujaipur.ac.in">Jaipur
+                                        National University (JNU)</option>
+                                    <option value="Amity University Rajasthan" data-domain="jaipur.amity.edu">Amity
+                                        University Rajasthan</option>
+                                    <option value="IIS University Jaipur" data-domain="iisuniv.ac.in">IIS University
+                                        (Deemed)</option>
+                                    <option value="Vivekananda Global University" data-domain="vgu.ac.in">Vivekananda
+                                        Global University</option>
+                                </optgroup>
+
+                                <optgroup label="Autonomous Colleges / Universities">
+                                    <option value="Poornima University" data-domain="poornima.edu.in">Poornima
+                                        University</option>
+                                    <option value="JECRC University" data-domain="jecrcuniversity.edu.in">JECRC
+                                        University</option>
+                                    <option value="Apex University" data-domain="apex.edu.in">Apex University</option>
+                                    <option value="University of Rajasthan" data-domain="uniraj.ac.in">University of
+                                        Rajasthan</option>
+                                </optgroup>
+
+                                <optgroup label="Engineering Colleges">
+                                    <option value="Arya College of Engineering" data-domain="aryacollege.in">Arya
+                                        College of Engineering</option>
+                                    <option value="SKIT Jaipur" data-domain="skit.ac.in">SKIT (Swami Keshvanand)
+                                    </option>
+                                    <option value="Global Institute of Technology" data-domain="git.ac.in">Global
+                                        Institute of Technology</option>
+                                    <option value="Poornima College of Engineering" data-domain="poornima.org">Poornima
+                                        College of Engineering</option>
+                                    <option value="Rajasthan College of Engineering" data-domain="rce.ac.in">Rajasthan
+                                        College of Engineering</option>
+                                    <option value="Tagore Engineering College" data-domain="tagoreengineering.ac.in">
+                                        Tagore Engineering College</option>
+                                    <option value="Jaipur Engineering College" data-domain="jecjaipuroncampus.in">Jaipur
+                                        Engineering College</option>
+                                </optgroup>
+
+                                <optgroup label="Other">
+                                    <option value="Other Jaipur College" data-domain="">Other College in Jaipur</option>
+                                    <option value="Out of Jaipur" data-domain="">College Outside Jaipur</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-full" id="registerBtn" onclick="handleRegister()">
+                        ✦ Get My Gate Pass
+                    </button>
+                </div>
+
+                <!-- Registered card (shown after registration) -->
+                <div class="glass-card reg-card hidden" id="registeredCard" style="cursor:default;">
+                    <div class="registered-card-inner">
+                        <div style="font-size:3rem;margin-bottom:0.75rem;">🎟️</div>
+                        <h2
+                            style="font-family:'Cinzel',serif;font-size:1.2rem;margin-bottom:0.4rem;letter-spacing:0.04em;">
+                            Registration Complete</h2>
+                        <p style="color:var(--text-muted);font-size:0.85rem;font-style:italic;margin-bottom:1.25rem;">
+                            You're all set for Aarohan 1.0!
+                        </p>
+                        <div class="reg-summary-box">
+                            <p
+                                style="font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.2em;margin-bottom:0.3rem;font-weight:700;">
+                                Gate Pass ID</p>
+                            <p class="reg-pass-id-big" id="passIDDisplay2">—</p>
+                        </div>
+                        <p style="color:var(--text-muted);font-size:0.78rem;line-height:1.6;font-style:italic;">
+                            📸 Screenshot or download your gate pass.<br />Present it at the venue entrance on the day
+                            of the fest.
+                        </p>
+                    </div>
+                </div>
+
+            </div><!-- /left -->
+
+            <!-- ===== RIGHT: GATE PASS ===== -->
+            <div>
+
+                <!-- Placeholder -->
+                <div class="pass-placeholder" id="passPlaceholder">
+                    <div class="ph-icon">🎫</div>
+                    <p>Your digital gate pass will appear here after registration.</p>
+                </div>
+
+                <!-- Gate Pass Section -->
+                <div class="hidden" id="gatePassSection">
+
+                    <div class="gate-pass" id="gatePassCard">
+
+                        <div class="pass-header">
+                            <div>
+                                <div class="pass-fest-name">AAROHAN</div>
+                                <div class="pass-fest-sub">1 . 0 &nbsp;·&nbsp; U E M &nbsp; J A I P U R</div>
+                            </div>
+                            <div class="founding-badge">⭐ Founding Edition</div>
+                        </div>
+
+                        <div class="pass-divider"></div>
+
+                        <div class="pass-info">
+                            <div class="pass-info-row">
+
+                                <!-- Left: info -->
+                                <div style="flex:1;">
+
+                                    <div class="pass-field">
+                                        <div class="pass-field-label">Participant Name</div>
+                                        <div class="pass-field-value" id="passName">—</div>
+                                    </div>
+
+                                    <!-- College with logo -->
+                                    <div class="pass-field">
+                                        <div class="pass-field-label">College</div>
+                                        <div class="pass-college-row">
+                                            <img class="pass-college-logo" id="passCollegeLogo" src="" alt=""
+                                                loading="lazy" onerror="this.style.display='none'" />
+                                            <span class="pass-field-value" id="passCollege">—</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="pass-field">
+                                        <div class="pass-field-label">Gate Pass ID</div>
+                                        <div class="pass-id" id="passID">—</div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Right: QR -->
+                                <div class="qr-container">
+                                    <div id="qrcode"></div>
+                                    <span class="qr-label">Scan to Verify</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="pass-divider"></div>
+
+                        <div class="pass-footer">
+                            <em>Aarohan 1.0 · The Beginning of a Legacy</em><br />
+                            University of Engineering &amp; Management, Jaipur &nbsp;·&nbsp; Valid for Single Entry
+                        </div>
+
+                    </div><!-- /gate-pass -->
+
+                    <button class="btn btn-outline btn-full" id="downloadBtn" onclick="downloadPass()">
+                        ⬇ Download Gate Pass
+                    </button>
+
+                </div>
+
+            </div><!-- /right -->
+
+        </div><!-- /grid -->
+    </div><!-- /dashboardContent -->
+
+    <!-- SUCCESS OVERLAY -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-box">
+            <div class="success-checkmark">🎟️</div>
+            <h2 class="success-title">Registration Successful!</h2>
+            <p class="success-sub" id="successMsg">Your gate pass is ready. See you at Aarohan!</p>
+            <button class="btn btn-primary"
+                onclick="document.getElementById('successOverlay').classList.remove('show')">
+                View My Gate Pass
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPT ===== -->
+    <script type="module">
+        import { auth, db } from './firebase.js';
+        import {
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import {
+            collection,
+            addDoc,
+            query,
+            where,
+            getDocs,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        let currentUser = null;
+
+        /* College → domain map for logo (Google Favicon API) */
+        const COLLEGE_DOMAINS = {
+            "MNIT Jaipur": "mnit.ac.in",
+            "UEM Jaipur": "uem.edu.in",
+            "Manipal University Jaipur": "jaipur.manipal.edu",
+            "LNMIIT Jaipur": "lnmiit.ac.in",
+            "Jaipur National University": "jnujaipur.ac.in",
+            "Amity University Rajasthan": "jaipur.amity.edu",
+            "IIS University Jaipur": "iisuniv.ac.in",
+            "Vivekananda Global University": "vgu.ac.in",
+            "Poornima University": "poornima.edu.in",
+            "JECRC University": "jecrcuniversity.edu.in",
+            "Apex University": "apex.edu.in",
+            "University of Rajasthan": "uniraj.ac.in",
+            "Arya College of Engineering": "aryacollege.in",
+            "SKIT Jaipur": "skit.ac.in",
+            "Global Institute of Technology": "git.ac.in",
+            "Poornima College of Engineering": "poornima.org",
+            "Rajasthan College of Engineering": "rce.ac.in",
+            "Tagore Engineering College": "tagoreengineering.ac.in",
+            "Jaipur Engineering College": "jecjaipuroncampus.in"
+        };
+
+        function getCollegeLogo(name) {
+            const d = COLLEGE_DOMAINS[name];
+            return d ? `https://www.google.com/s2/favicons?sz=64&domain=${d}` : '';
+        }
+
+        /* ---- Auth guard ---- */
+        onAuthStateChanged(auth, async (user) => {
+            document.getElementById('authLoading').classList.add('hidden');
+            if (!user) { window.location.href = 'login.html'; return; }
+
+            currentUser = user;
+            document.getElementById('dashboardContent').classList.remove('hidden');
+
+            const displayName = user.displayName || user.email.split('@')[0];
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userEmail').textContent = user.email || '';
+
+            if (user.displayName) document.getElementById('regName').value = user.displayName;
+
+            await checkExistingRegistration(user.email || user.uid);
+        });
+
+        /* ---- Check existing registration ---- */
+        async function checkExistingRegistration(identifier) {
+            try {
+                const q = query(collection(db, 'participants'), where('email', '==', identifier));
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    const d = snap.docs[0].data();
+                    renderGatePass(d.name, d.college, d.gatePassID);
+                    showRegisteredState(d.gatePassID);
+                }
+            } catch (err) {
+                console.warn('Could not check existing registration:', err.message);
+            }
+        }
+
+        /* ---- Register ---- */
+        window.handleRegister = async () => {
+            const name = document.getElementById('regName').value.trim();
+            const college = document.getElementById('regCollege').value;
+            const errEl = document.getElementById('regError');
+
+            errEl.classList.remove('show');
+
+            if (!name) { showRegError('Please enter your full name.'); return; }
+            if (!college) { showRegError('Please select your college.'); return; }
+
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Registering...';
+
+            const identifier = currentUser.email || currentUser.uid;
+
+            try {
+                /* Duplicate check */
+                const q = query(collection(db, 'participants'), where('email', '==', identifier));
+                const snap = await getDocs(q);
+
+                if (!snap.empty) {
+                    const d = snap.docs[0].data();
+                    renderGatePass(d.name, d.college, d.gatePassID);
+                    showRegisteredState(d.gatePassID);
+                    btn.disabled = false;
+                    btn.innerHTML = '✦ Get My Gate Pass';
+                    return;
+                }
+
+                /* Generate Gate Pass ID */
+                const gatePassID = 'AARO-' + Math.floor(10000 + Math.random() * 90000);
+
+                /* Save to Firestore */
+                await addDoc(collection(db, 'participants'), {
+                    name: name,
+                    college: college,
+                    email: identifier,
+                    gatePassID: gatePassID,
+                    timestamp: serverTimestamp()
+                });
+
+                renderGatePass(name, college, gatePassID);
+                showRegisteredState(gatePassID);
+
+                document.getElementById('successMsg').textContent =
+                    `Pass ID: ${gatePassID} — Welcome to Aarohan 1.0, ${name}!`;
+                document.getElementById('successOverlay').classList.add('show');
+
+            } catch (err) {
+                console.error(err);
+                showRegError('Registration failed: ' + err.message);
+                btn.disabled = false;
+                btn.innerHTML = '✦ Get My Gate Pass';
+            }
+        };
+
+        /* ---- Render gate pass ---- */
+        function renderGatePass(name, college, gatePassID) {
+            document.getElementById('passName').textContent = name;
+            document.getElementById('passCollege').textContent = college;
+            document.getElementById('passID').textContent = gatePassID;
+            document.getElementById('passIDDisplay2').textContent = gatePassID;
+
+            /* College logo */
+            const logoUrl = getCollegeLogo(college);
+            const logoImg = document.getElementById('passCollegeLogo');
+            if (logoUrl) {
+                logoImg.src = logoUrl;
+                logoImg.alt = college + ' logo';
+                logoImg.style.display = 'inline-block';
+            } else {
+                logoImg.style.display = 'none';
+            }
+
+            /* QR Code — Gate Pass ID only */
+            const qrEl = document.getElementById('qrcode');
+            qrEl.innerHTML = '';
+            new QRCode(qrEl, {
+                text: gatePassID,
+                width: 110, height: 110,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('passPlaceholder').classList.add('hidden');
+            document.getElementById('gatePassSection').classList.remove('hidden');
+        }
+
+        function showRegisteredState(gatePassID) {
+            document.getElementById('regCard').classList.add('hidden');
+            document.getElementById('registeredCard').classList.remove('hidden');
+            if (gatePassID) document.getElementById('passIDDisplay2').textContent = gatePassID;
+        }
+
+        function showRegError(msg) {
+            const el = document.getElementById('regError');
+            el.textContent = '⚠ ' + msg;
+            el.classList.add('show');
+        }
+
+        /* ---- Download gate pass ---- */
+        window.downloadPass = async () => {
+            const btn = document.getElementById('downloadBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Preparing...';
+            try {
+                const passID = document.getElementById('passID').textContent;
+                const canvas = await html2canvas(document.getElementById('gatePassCard'), {
+                    backgroundColor: '#0b0018',
+                    scale: 2.5,
+                    useCORS: true,
+                    logging: false
+                });
+                const link = document.createElement('a');
+                link.download = `Aarohan1-GatePass-${passID}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (e) {
+                alert('Download failed. Please take a screenshot instead.');
+                console.error(e);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '⬇ Download Gate Pass';
+            }
+        };
+
+        /* ---- Logout ---- */
+        async function doLogout() {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        }
+        document.getElementById('logoutNavBtn').addEventListener('click', doLogout);
+        document.getElementById('logoutMainBtn').addEventListener('click', doLogout);
+
+    </script>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', function () {
+            this.classList.toggle('open');
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events — Aarohan 1.0 | UEM Jaipur</title>
+    <meta name="description"
+        content="Register for events at Aarohan 1.0 — Solo Singing, Solo Dance, Band, Group Dance, T-shirt Painting, Nukkad Natak." />
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+        /* ===== EVENT CARDS ===== */
+        .events-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        .events-6-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .ev-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 165, 32, 0.1);
+            border-top: 2px solid transparent;
+            border-image: var(--grad-gold) 1 1 0 1;
+            padding: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .ev-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--grad-gold);
+            opacity: 0.4;
+        }
+
+        .ev-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 165, 32, 0.25);
+            box-shadow: var(--shadow-gold);
+            background: rgba(212, 165, 32, 0.03);
+        }
+
+        .ev-top {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .ev-icon-wrap {
+            font-size: 2.2rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .ev-type-badge {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            border: 1px solid;
+            margin-bottom: 0.25rem;
+        }
+
+        .badge-solo {
+            color: #7dd3fc;
+            border-color: rgba(125, 211, 252, 0.3);
+            background: rgba(125, 211, 252, 0.06);
+        }
+
+        .badge-group {
+            color: #c084fc;
+            border-color: rgba(192, 132, 252, 0.3);
+            background: rgba(192, 132, 252, 0.06);
+        }
+
+        .badge-art {
+            color: #6ee7b7;
+            border-color: rgba(110, 231, 183, 0.3);
+            background: rgba(110, 231, 183, 0.06);
+        }
+
+        .ev-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.15rem;
+            letter-spacing: 0.05em;
+            color: var(--gold-light);
+            margin: 0;
+        }
+
+        .ev-desc {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+            flex: 1;
+        }
+
+        .ev-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .ev-chip {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.65rem;
+            border: 1px solid rgba(212, 165, 32, 0.2);
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+        }
+
+        .ev-register-btn {
+            margin-top: 0.5rem;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(3, 3, 5, 0.88);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-card {
+            background: #0d0d18;
+            border: 1px solid rgba(212, 165, 32, 0.2);
+            border-top: 3px solid;
+            border-image: var(--grad-gold) 1;
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.25rem 2rem;
+            position: relative;
+            transform: translateY(24px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.open .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.25rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--gold);
+        }
+
+        .modal-ev-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-ev-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.35rem;
+            letter-spacing: 0.06em;
+            color: var(--gold-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-ev-sub {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 1.75rem;
+        }
+
+        /* Member input rows for group events */
+        .members-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .member-row {
+            padding: 1rem;
+            border: 1px solid rgba(212, 165, 32, 0.12);
+            background: rgba(212, 165, 32, 0.02);
+            position: relative;
+        }
+
+        .member-row-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.75rem;
+        }
+
+        .member-id-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+
+        .verify-id-btn {
+            padding: 0.7rem 1rem;
+            background: none;
+            border: 1px solid rgba(212, 165, 32, 0.3);
+            color: var(--gold);
+            cursor: pointer;
+            font-size: 0.78rem;
+            white-space: nowrap;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .verify-id-btn:hover {
+            background: rgba(212, 165, 32, 0.08);
+        }
+
+        .verify-id-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .member-verified {
+            margin-top: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: #6ee7b7;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .member-verified.show {
+            display: block;
+        }
+
+        .member-error {
+            margin-top: 0.5rem;
+            font-size: 0.78rem;
+            color: #fca5a5;
+            display: none;
+        }
+
+        .member-error.show {
+            display: block;
+        }
+
+        .remove-member-btn {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        .remove-member-btn:hover {
+            color: #fca5a5;
+        }
+
+        .add-member-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem;
+            background: none;
+            border: 1px dashed rgba(212, 165, 32, 0.2);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+
+        .add-member-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .modal-result-msg {
+            padding: 0.85rem 1rem;
+            font-size: 0.85rem;
+            border: 1px solid;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .modal-result-msg.error {
+            background: rgba(239, 68, 68, 0.07);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            display: block;
+        }
+
+        .modal-result-msg.success {
+            background: rgba(16, 185, 129, 0.07);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            display: block;
+        }
+
+        .modal-section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin: 1.25rem 0 0.5rem;
+        }
+
+        /* Scrollbar styling for modal */
+        .modal-card::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .modal-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-card::-webkit-scrollbar-thumb {
+            background: rgba(212, 165, 32, 0.3);
+        }
+
+        /* login notice */
+        .login-notice {
+            text-align: center;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 165, 32, 0.15);
+            background: rgba(212, 165, 32, 0.03);
+            margin-bottom: 1.5rem;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">AAROHAN</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html" class="active">Events</a></li>
+            <li><a href="login.html" id="navLoginBtn">Login</a></li>
+            <li><a href="dashboard.html" id="navDashBtn" style="display:none">Dashboard</a></li>
+            <li><button class="btn btn-primary btn-sm" id="navRegBtn"
+                    onclick="location.href='login.html'">Register</button></li>
+        </ul>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+        <span class="section-tag">✦ Aarohan 1.0</span>
+        <h1>The <span class="gradient-text">Events</span></h1>
+        <p>Six disciplines. One legendary stage. Click an event below to register.</p>
+    </div>
+
+    <!-- EVENTS GRID -->
+    <div class="events-section">
+
+        <div id="loginBanner" style="display:none;" class="login-notice">
+            🔐 &nbsp;Please <a href="login.html" style="color:var(--gold);font-weight:600;">sign in with Google</a> and
+            get your Gate Pass first, then come back to register for events.
+        </div>
+
+        <div class="events-6-grid">
+
+            <!-- Solo Singing -->
+            <div class="ev-card">
+                <div class="ev-top">
+                    <div class="ev-icon-wrap">🎤</div>
+                    <div>
+                        <div class="ev-type-badge badge-solo">Solo</div>
+                        <h2 class="ev-name">Solo Singing</h2>
+                    </div>
+                </div>
+                <p class="ev-desc">One voice. One story. Let your vocals carve silence into emotion on the grandest
+                    stage of UEM Jaipur.</p>
+                <div class="ev-meta">
+                    <span class="ev-chip">🏆 Prize Pool: TBA</span>
+                    <span class="ev-chip">⏱ 3–5 mins</span>
+                    <span class="ev-chip">👤 Solo</span>
+                </div>
+                <button class="btn btn-primary ev-register-btn" onclick="openModal('Solo Singing')">Register Now
+                    →</button>
+            </div>
+
+            <!-- Solo Dance -->
+            <div class="ev-card">
+                <div class="ev-top">
+                    <div class="ev-icon-wrap">💃</div>
+                    <div>
+                        <div class="ev-type-badge badge-solo">Solo</div>
+                        <h2 class="ev-name">Solo Dance</h2>
+                    </div>
+                </div>
+                <p class="ev-desc">Classical grace or contemporary fire — let your body be the voice that speaks without
+                    words.</p>
+                <div class="ev-meta">
+                    <span class="ev-chip">🏆 Prize Pool: TBA</span>
+                    <span class="ev-chip">⏱ 3–6 mins</span>
+                    <span class="ev-chip">👤 Solo</span>
+                </div>
+                <button class="btn btn-primary ev-register-btn" onclick="openModal('Solo Dance')">Register Now
+                    →</button>
+            </div>
+
+            <!-- Band -->
+            <div class="ev-card">
+                <div class="ev-top">
+                    <div class="ev-icon-wrap">🎸</div>
+                    <div>
+                        <div class="ev-type-badge badge-group">Group</div>
+                        <h2 class="ev-name">Band</h2>
+                    </div>
+                </div>
+                <p class="ev-desc">When multiple instruments speak as one, the result is magic. Form your band and rock
+                    the stage.</p>
+                <div class="ev-meta">
+                    <span class="ev-chip">🏆 Prize Pool: TBA</span>
+                    <span class="ev-chip">⏱ 8–12 mins</span>
+                    <span class="ev-chip">👥 3–8 Members</span>
+                </div>
+                <button class="btn btn-primary ev-register-btn" onclick="openModal('Band')">Register Now →</button>
+            </div>
+
+            <!-- Group Dance -->
+            <div class="ev-card">
+                <div class="ev-top">
+                    <div class="ev-icon-wrap">🕺</div>
+                    <div>
+                        <div class="ev-type-badge badge-group">Group</div>
+                        <h2 class="ev-name">Group Dance</h2>
+                    </div>
+                </div>
+                <p class="ev-desc">Synchronised energy, shared rhythm, collective expression — bring your crew and own
+                    the floor together.</p>
+                <div class="ev-meta">
+                    <span class="ev-chip">🏆 Prize Pool: TBA</span>
+                    <span class="ev-chip">⏱ 5–10 mins</span>
+                    <span class="ev-chip">👥 4–15 Members</span>
+                </div>
+                <button class="btn btn-primary ev-register-btn" onclick="openModal('Group Dance')">Register Now
+                    →</button>
+            </div>
+
+            <!-- T-shirt Painting -->
+            <div class="ev-card">
+                <div class="ev-top">
+                    <div class="ev-icon-wrap">🎨</div>
+                    <div>
+                        <div class="ev-type-badge badge-art">Visual Art</div>
+                        <h2 class="ev-name">T-Shirt Painting</h2>
+                    </div>
+                </div>
+                <p class="ev-desc">A canvas that breathes. Paint your story on fabric and wear your art with pride at
+                    Aarohan 1.0.</p>
+                <div class="ev-meta">
+                    <span class="ev-chip">🏆 Prize Pool: TBA</span>
+                    <span class="ev-chip">⏱ 60 mins</span>
+                    <span class="ev-chip">👥 1–2 Members</span>
+                </div>
+                <button class="btn btn-primary ev-register-btn" onclick="openModal('T-Shirt Painting')">Register Now
+                    →</button>
+            </div>
+
+            <!-- Nukkad Natak -->
+            <div class="ev-card">
+                <div class="ev-top">
+                    <div class="ev-icon-wrap">🎭</div>
+                    <div>
+                        <div class="ev-type-badge badge-group">Group</div>
+                        <h2 class="ev-name">Nukkad Natak</h2>
+                    </div>
+                </div>
+                <p class="ev-desc">Street theatre at its most raw and powerful. No props needed — just passion, truth,
+                    and collective voice.</p>
+                <div class="ev-meta">
+                    <span class="ev-chip">🏆 Prize Pool: TBA</span>
+                    <span class="ev-chip">⏱ 10–15 mins</span>
+                    <span class="ev-chip">👥 5–20 Members</span>
+                </div>
+                <button class="btn btn-primary ev-register-btn" onclick="openModal('Nukkad Natak')">Register Now
+                    →</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ======== REGISTRATION MODAL ======== -->
+    <div class="modal-overlay" id="regModal" onclick="handleOverlayClick(event)">
+        <div class="modal-card" id="modalCard">
+
+            <button class="modal-close" onclick="closeModal()" title="Close">✕</button>
+
+            <div class="modal-ev-icon" id="modalIcon">🎤</div>
+            <h2 class="modal-ev-name" id="modalName">Solo Singing</h2>
+            <p class="modal-ev-sub" id="modalSub">Enter your Aarohan Gate Pass ID to register.</p>
+
+            <!-- Result messages -->
+            <div class="modal-result-msg" id="modalMsg"></div>
+
+            <!-- ---- SOLO FORM ---- -->
+            <div id="soloForm">
+                <p class="modal-section-label">Your Aarohan Gate Pass ID</p>
+                <div class="member-id-row">
+                    <input class="form-input" type="text" id="soloAarohanId" placeholder="AARO-12345" maxlength="10"
+                        style="text-transform:uppercase;letter-spacing:0.1em;"
+                        oninput="this.value=this.value.toUpperCase()" />
+                    <button class="verify-id-btn" id="soloVerifyBtn" onclick="verifySoloId()">Verify</button>
+                </div>
+                <div class="member-verified" id="soloVerified"></div>
+                <div class="member-error" id="soloError"></div>
+            </div>
+
+            <!-- ---- GROUP FORM ---- -->
+            <div id="groupForm" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label" for="teamName">Team Name</label>
+                    <input class="form-input" type="text" id="teamName" placeholder="Your team's name" />
+                </div>
+                <p class="modal-section-label">Team Members &nbsp;<span id="memberCountInfo"
+                        style="font-weight:400;color:var(--text-muted);font-size:0.68rem;"></span></p>
+                <div class="members-list" id="membersList"></div>
+                <button class="add-member-btn" id="addMemberBtn" onclick="addMemberRow()">
+                    ＋ &nbsp;Add Member
+                </button>
+            </div>
+
+            <!-- Submit -->
+            <button class="btn btn-primary btn-full" id="modalSubmitBtn" onclick="submitRegistration()"
+                style="margin-top:1.75rem;">
+                ✦ Confirm Registration
+            </button>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <span class="footer-logo">AAROHAN 1.0</span>
+        <div class="footer-ornament">✦ ✦ ✦</div>
+        <p style="font-style:italic;font-family:'Playfair Display',serif;">The Beginning of a Legacy · UEM Jaipur</p>
+        <p style="margin-top:1rem;font-size:0.75rem;opacity:0.5;">© 2026 UEM Jaipur. All rights reserved.</p>
+    </footer>
+
+    <!-- ===== FIREBASE + LOGIC ===== -->
+    <script type="module">
+        import { auth, db } from './firebase.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import {
+            collection, addDoc, query, where, getDocs, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // ================================================================
+        //  EVENT DEFINITIONS
+        // ================================================================
+        const EVENTS = {
+            'Solo Singing': { icon: '🎤', type: 'solo', min: 1, max: 1 },
+            'Solo Dance': { icon: '💃', type: 'solo', min: 1, max: 1 },
+            'Band': { icon: '🎸', type: 'group', min: 3, max: 8 },
+            'Group Dance': { icon: '🕺', type: 'group', min: 4, max: 15 },
+            'T-Shirt Painting': { icon: '🎨', type: 'group', min: 1, max: 2 },
+            'Nukkad Natak': { icon: '🎭', type: 'group', min: 5, max: 20 },
+        };
+
+        let currentUser = null;
+        let currentEvent = null;
+        let soloVerifiedData = null;   // { name, college } after verify
+        let memberVerifiedMap = {};    // rowId → { gatePassID, name, college }
+        let memberRowCount = 0;
+
+        // ── Auth state ──
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                document.getElementById('navLoginBtn').style.display = 'none';
+                document.getElementById('navDashBtn').style.display = 'inline';
+                document.getElementById('navRegBtn').textContent = 'My Pass';
+                document.getElementById('navRegBtn').onclick = () => location.href = 'dashboard.html';
+            } else {
+                document.getElementById('loginBanner').style.display = 'block';
+            }
+        });
+
+        // ================================================================
+        //  MODAL OPEN / CLOSE
+        // ================================================================
+        window.openModal = (eventName) => {
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentEvent = eventName;
+            soloVerifiedData = null;
+            memberVerifiedMap = {};
+            memberRowCount = 0;
+
+            const ev = EVENTS[eventName];
+
+            document.getElementById('modalIcon').textContent = ev.icon;
+            document.getElementById('modalName').textContent = eventName;
+            document.getElementById('modalMsg').className = 'modal-result-msg';
+            document.getElementById('modalMsg').textContent = '';
+
+            const soloDiv = document.getElementById('soloForm');
+            const groupDiv = document.getElementById('groupForm');
+
+            if (ev.type === 'solo') {
+                soloDiv.style.display = 'block';
+                groupDiv.style.display = 'none';
+                document.getElementById('modalSub').textContent = 'Enter your Aarohan Gate Pass ID to register.';
+                document.getElementById('soloAarohanId').value = '';
+                document.getElementById('soloVerified').className = 'member-verified';
+                document.getElementById('soloError').className = 'member-error';
+                document.getElementById('soloVerifyBtn').disabled = false;
+            } else {
+                soloDiv.style.display = 'none';
+                groupDiv.style.display = 'block';
+                document.getElementById('modalSub').textContent = `Members: ${ev.min}–${ev.max}. Each member must enter their Aarohan Gate Pass ID.`;
+                document.getElementById('memberCountInfo').textContent = `(${ev.min}–${ev.max} members)`;
+                document.getElementById('teamName').value = '';
+                document.getElementById('membersList').innerHTML = '';
+                // Start with min members pre-added
+                const startWith = Math.max(2, ev.min);
+                for (let i = 0; i < startWith; i++) addMemberRow();
+                updateAddMemberBtn();
+            }
+
+            document.getElementById('regModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeModal = () => {
+            document.getElementById('regModal').classList.remove('open');
+            document.body.style.overflow = '';
+        };
+
+        window.handleOverlayClick = (e) => {
+            if (e.target === document.getElementById('regModal')) closeModal();
+        };
+
+        // ================================================================
+        //  MEMBER ROW (group events)
+        // ================================================================
+        window.addMemberRow = () => {
+            const ev = EVENTS[currentEvent];
+            const list = document.getElementById('membersList');
+            if (list.children.length >= ev.max) return;
+
+            const id = ++memberRowCount;
+            const num = list.children.length + 1;
+            const row = document.createElement('div');
+            row.className = 'member-row';
+            row.id = `mrow-${id}`;
+            row.innerHTML = `
+        <div class="member-row-title">Member ${num}</div>
+        ${num > 1 ? `<button class="remove-member-btn" onclick="removeMemberRow('mrow-${id}')" title="Remove">✕</button>` : ''}
+        <div class="member-id-row">
+          <input class="form-input" type="text" id="mid-${id}"
+                 placeholder="AARO-12345" maxlength="10"
+                 style="text-transform:uppercase;letter-spacing:0.1em;"
+                 oninput="this.value=this.value.toUpperCase()" />
+          <button class="verify-id-btn" id="mvbtn-${id}" onclick="verifyMemberId(${id})">Verify</button>
+        </div>
+        <div class="member-verified" id="mverified-${id}"></div>
+        <div class="member-error"    id="merror-${id}"></div>
+      `;
+            list.appendChild(row);
+            updateAddMemberBtn();
+        };
+
+        window.removeMemberRow = (rowId) => {
+            document.getElementById(rowId)?.remove();
+            // Clean verified map for this row
+            const rid = rowId.replace('mrow-', '');
+            delete memberVerifiedMap[rid];
+            renumberMemberRows();
+            updateAddMemberBtn();
+        };
+
+        function renumberMemberRows() {
+            document.querySelectorAll('.member-row').forEach((row, i) => {
+                const title = row.querySelector('.member-row-title');
+                if (title) title.textContent = `Member ${i + 1}`;
+            });
+        }
+
+        function updateAddMemberBtn() {
+            const ev = EVENTS[currentEvent];
+            const btn = document.getElementById('addMemberBtn');
+            const cur = document.getElementById('membersList').children.length;
+            if (btn) btn.style.display = cur >= ev.max ? 'none' : 'flex';
+        }
+
+        // ================================================================
+        //  VERIFY AAROHAN ID  (shared for solo & group)
+        // ================================================================
+        async function queryGatePassId(gatePassID) {
+            const trimmed = gatePassID.trim().toUpperCase();
+            if (!trimmed.startsWith('AARO-') || trimmed.length < 8) return null;
+            const q = query(collection(db, 'participants'), where('gatePassID', '==', trimmed));
+            const snap = await getDocs(q);
+            if (snap.empty) return null;
+            return snap.docs[0].data(); // { name, college, email, gatePassID }
+        }
+
+        window.verifySoloId = async () => {
+            const rawId = document.getElementById('soloAarohanId').value.trim().toUpperCase();
+            const verDiv = document.getElementById('soloVerified');
+            const errDiv = document.getElementById('soloError');
+            const btn = document.getElementById('soloVerifyBtn');
+
+            verDiv.className = 'member-verified';
+            errDiv.className = 'member-error';
+            soloVerifiedData = null;
+
+            if (!rawId) { errDiv.textContent = '⚠ Please enter your Gate Pass ID.'; errDiv.classList.add('show'); return; }
+
+            btn.disabled = true;
+            btn.textContent = '...';
+
+            try {
+                const data = await queryGatePassId(rawId);
+                if (!data) {
+                    errDiv.textContent = '✕ ID not found. Get your Gate Pass from the Dashboard first.';
+                    errDiv.classList.add('show');
+                } else {
+                    soloVerifiedData = data;
+                    verDiv.textContent = `✓ Verified: ${data.name} — ${data.college}`;
+                    verDiv.classList.add('show');
+                }
+            } catch (e) {
+                errDiv.textContent = '⚠ Verification failed. Check connection.';
+                errDiv.classList.add('show');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Verify';
+            }
+        };
+
+        window.verifyMemberId = async (rowId) => {
+            const rawId = document.getElementById(`mid-${rowId}`).value.trim().toUpperCase();
+            const verDiv = document.getElementById(`mverified-${rowId}`);
+            const errDiv = document.getElementById(`merror-${rowId}`);
+            const btn = document.getElementById(`mvbtn-${rowId}`);
+
+            verDiv.className = 'member-verified';
+            errDiv.className = 'member-error';
+            delete memberVerifiedMap[rowId];
+
+            if (!rawId) { errDiv.textContent = '⚠ Enter a Gate Pass ID.'; errDiv.classList.add('show'); return; }
+
+            btn.disabled = true;
+            btn.textContent = '...';
+
+            try {
+                const data = await queryGatePassId(rawId);
+                if (!data) {
+                    errDiv.textContent = `✕ ID not found. This member must get a Gate Pass first.`;
+                    errDiv.classList.add('show');
+                } else {
+                    // Check for duplicate within this form
+                    const alreadyUsed = Object.entries(memberVerifiedMap)
+                        .some(([k, v]) => k !== String(rowId) && v.gatePassID === rawId);
+                    if (alreadyUsed) {
+                        errDiv.textContent = '✕ This ID is already added.';
+                        errDiv.classList.add('show');
+                    } else {
+                        memberVerifiedMap[rowId] = { ...data, gatePassID: rawId };
+                        verDiv.textContent = `✓ ${data.name} — ${data.college}`;
+                        verDiv.classList.add('show');
+                    }
+                }
+            } catch (e) {
+                errDiv.textContent = '⚠ Verification failed. Check connection.';
+                errDiv.classList.add('show');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Verify';
+            }
+        };
+
+        // ================================================================
+        //  SUBMIT REGISTRATION
+        // ================================================================
+        window.submitRegistration = async () => {
+            const msgEl = document.getElementById('modalMsg');
+            const btn = document.getElementById('modalSubmitBtn');
+            const ev = EVENTS[currentEvent];
+
+            msgEl.className = 'modal-result-msg';
+            msgEl.textContent = '';
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Registering...';
+
+            try {
+                let members = [];
+
+                // ---- Solo ----
+                if (ev.type === 'solo') {
+                    if (!soloVerifiedData) {
+                        showModalMsg('error', 'Please verify your Aarohan Gate Pass ID first.');
+                        btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
+                    }
+                    members = [soloVerifiedData];
+
+                    // Duplicate check: same person + same event
+                    const dup = await getDocs(
+                        query(collection(db, 'eventRegistrations'),
+                            where('event', '==', currentEvent),
+                            where('leadGatePassID', '==', soloVerifiedData.gatePassID))
+                    );
+                    if (!dup.empty) {
+                        showModalMsg('error', `You are already registered for ${currentEvent}.`);
+                        btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
+                    }
+
+                    await addDoc(collection(db, 'eventRegistrations'), {
+                        event: currentEvent,
+                        type: 'solo',
+                        leadGatePassID: soloVerifiedData.gatePassID,
+                        members: members,
+                        registeredByUid: currentUser.uid,
+                        timestamp: serverTimestamp()
+                    });
+
+                    showModalMsg('success', `✦ Registered for ${currentEvent}! See you on stage, ${soloVerifiedData.name}.`);
+                    setTimeout(closeModal, 2600);
+
+                    // ---- Group ----
+                } else {
+                    const teamName = document.getElementById('teamName').value.trim();
+                    if (!teamName) { showModalMsg('error', 'Please enter a team name.'); btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return; }
+
+                    const rows = document.getElementById('membersList').children;
+                    if (rows.length < ev.min) {
+                        showModalMsg('error', `At least ${ev.min} members required for ${currentEvent}.`);
+                        btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
+                    }
+
+                    // Collect all row IDs
+                    const rowIds = Array.from(rows).map(r => r.id.replace('mrow-', ''));
+                    for (const rid of rowIds) {
+                        if (!memberVerifiedMap[rid]) {
+                            showModalMsg('error', 'Please verify all member Gate Pass IDs before submitting.');
+                            btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
+                        }
+                        members.push(memberVerifiedMap[rid]);
+                    }
+
+                    const leadId = members[0].gatePassID;
+
+                    // Duplicate check: same team lead + same event
+                    const dup = await getDocs(
+                        query(collection(db, 'eventRegistrations'),
+                            where('event', '==', currentEvent),
+                            where('leadGatePassID', '==', leadId))
+                    );
+                    if (!dup.empty) {
+                        showModalMsg('error', `This team is already registered for ${currentEvent}.`);
+                        btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
+                    }
+
+                    await addDoc(collection(db, 'eventRegistrations'), {
+                        event: currentEvent,
+                        type: 'group',
+                        teamName: teamName,
+                        leadGatePassID: leadId,
+                        members: members,
+                        memberCount: members.length,
+                        registeredByUid: currentUser.uid,
+                        timestamp: serverTimestamp()
+                    });
+
+                    showModalMsg('success', `✦ "${teamName}" registered for ${currentEvent}! All the best!`);
+                    setTimeout(closeModal, 2600);
+                }
+
+            } catch (err) {
+                console.error(err);
+                showModalMsg('error', 'Registration failed: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '✦ Confirm Registration';
+            }
+        };
+
+        function showModalMsg(type, text) {
+            const el = document.getElementById('modalMsg');
+            el.className = `modal-result-msg ${type}`;
+            el.textContent = text;
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Expose to global scope (called from onclick attributes)
+        window.addMemberRow = window.addMemberRow;
+        window.removeMemberRow = window.removeMemberRow;
+
+    </script>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', function () {
+            this.classList.toggle('open');
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+        // Close modal on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (typeof closeModal === 'function') closeModal();
+            }
+        });
+    </script>
+
+</body>
+
+</html>

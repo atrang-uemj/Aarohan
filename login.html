@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — Aarohan 1.0</title>
+    <meta name="description" content="Sign in to Aarohan 1.0 — UEM Jaipur's first inter-college cultural fest." />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* Center the single card nicely */
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo-text {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 0.25em;
+            background: var(--grad-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-logo-sub {
+            font-size: 0.7rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .auth-card {
+            padding: 2.5rem 2rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(212, 165, 32, 0.15);
+            border-top: 2px solid;
+            border-image: var(--grad-gold) 1;
+        }
+
+        .auth-icon {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .auth-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            letter-spacing: 0.06em;
+            text-align: center;
+            margin-bottom: 0.4rem;
+            color: var(--gold-light);
+        }
+
+        .auth-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .btn-google-big {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.85rem;
+            width: 100%;
+            padding: 0.9rem 1.5rem;
+            background: #fff;
+            color: #3c4043;
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: var(--transition);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-google-big:hover {
+            background: #f5f5f5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .btn-google-big img {
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .auth-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .error-box {
+            padding: 0.75rem 1rem;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            font-size: 0.85rem;
+            margin-bottom: 1.25rem;
+            display: none;
+        }
+
+        .error-box.show {
+            display: block;
+        }
+
+        .loading-box {
+            text-align: center;
+            padding: 1rem 0;
+            display: none;
+        }
+
+        .loading-box.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .divider-line {
+            width: 48px;
+            height: 1px;
+            background: rgba(212, 165, 32, 0.2);
+            margin: 1.75rem auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">AAROHAN</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="login.html" class="active">Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- AUTH PAGE -->
+    <div class="auth-page">
+        <div class="auth-container">
+
+            <!-- Logo -->
+            <div class="auth-logo">
+                <div class="auth-logo-text">AAROHAN</div>
+                <div class="auth-logo-sub">1 . 0 &nbsp;·&nbsp; U E M &nbsp; J A I P U R</div>
+            </div>
+
+            <!-- Card -->
+            <div class="auth-card">
+                <div class="auth-icon">🎭</div>
+                <h1 class="auth-title">Welcome to the Stage</h1>
+                <p class="auth-sub">Sign in with your Google account to register for an event and receive your digital
+                    gate pass.</p>
+
+                <!-- Error -->
+                <div class="error-box" id="errorBox"></div>
+
+                <!-- Loading -->
+                <div class="loading-box" id="loadingBox">
+                    <span class="spinner"></span> Signing you in...
+                </div>
+
+                <!-- Google Button -->
+                <button class="btn-google-big" id="googleBtn" onclick="signInWithGoogle()">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+                    Continue with Google
+                </button>
+
+                <div class="divider-line"></div>
+
+                <p class="auth-note">
+                    ✦ &nbsp;New users are automatically registered on first sign-in.<br />
+                    No password needed — just your Google account.
+                </p>
+            </div>
+
+            <p style="text-align:center;margin-top:1.25rem;font-size:0.72rem;color:var(--text-muted);">
+                By continuing, you agree to participate with fair-play spirit &nbsp;🎭
+            </p>
+        </div>
+    </div>
+
+    <!-- FIREBASE SCRIPT -->
+    <script type="module">
+        import { auth, googleProvider } from './firebase.js';
+        import {
+            onAuthStateChanged,
+            signInWithPopup
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        // Already logged in → go straight to dashboard
+        onAuthStateChanged(auth, (user) => {
+            if (user) window.location.href = 'dashboard.html';
+        });
+
+        window.signInWithGoogle = async () => {
+            const btn = document.getElementById('googleBtn');
+            const errorBox = document.getElementById('errorBox');
+            const loadBox = document.getElementById('loadingBox');
+
+            // Reset
+            errorBox.classList.remove('show');
+            errorBox.textContent = '';
+
+            // Show loading
+            btn.style.display = 'none';
+            loadBox.classList.add('show');
+
+            try {
+                await signInWithPopup(auth, googleProvider);
+                // onAuthStateChanged above will handle redirect
+            } catch (e) {
+                btn.style.display = 'flex';
+                loadBox.classList.remove('show');
+
+                const msgs = {
+                    'auth/popup-closed-by-user': 'Sign-in was cancelled. Please try again.',
+                    'auth/popup-blocked': 'Popup was blocked by your browser. Please allow popups for this site.',
+                    'auth/network-request-failed': 'Network error. Check your internet connection.',
+                    'auth/unauthorized-domain': 'This domain is not authorised. Add it in Firebase Console → Authentication → Settings → Authorized domains.',
+                    'auth/internal-error': 'An internal error occurred. Make sure you\'re opening this via Live Server (http://), not file://.',
+                };
+                errorBox.textContent = '⚠ ' + (msgs[e.code] || `Error: ${e.code}`);
+                errorBox.classList.add('show');
+                console.error('[Aarohan Auth Error]', e.code, e.message);
+            }
+        };
+    </script>
+
+    <script>
+        document.getElementById('hamburger').addEventListener('click', function () {
+            this.classList.toggle('open');
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+    </script>
+
+</body>
+
+</html>
