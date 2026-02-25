@@ -1840,12 +1840,13 @@ footer .footer-logo {
         right: 0;
         bottom: 0;
         flex-direction: column;
-        background: rgba(3, 3, 5, 0.97);
-        backdrop-filter: blur(24px);
+        align-items: center;
+        justify-content: center;
+        background: #000;
+        backdrop-filter: none;
         padding: 2rem 1.5rem;
-        gap: 1.75rem;
-        justify-content: flex-start;
-        overflow-y: auto;
+        gap: 2rem;
+        overflow: visible;
         z-index: 999;
     }
 
@@ -2270,5 +2271,362 @@ footer .footer-logo {
 
     .modal-ev-name {
         font-size: 0.95rem;
+    }
+}
+
+/* ======================================================
+   ADDITIONAL BREAKPOINTS
+   ====================================================== */
+
+/* -------- Large laptop (≤1200px) -------- */
+@media (max-width: 1200px) {
+    .events-6-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .about-grid {
+        gap: 2rem;
+    }
+
+    .dashboard-grid {
+        gap: 1.5rem;
+    }
+
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-title {
+        font-size: clamp(5rem, 12vw, 9rem);
+    }
+
+    section {
+        padding: 5rem 2rem;
+    }
+}
+
+/* -------- Small tablet / large phone (≤768px) -------- */
+@media (max-width: 768px) {
+
+    /* Layout */
+    section {
+        padding: 3.5rem 1.25rem;
+    }
+
+    .events-6-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .events-section {
+        padding: 0 1.25rem 3rem;
+    }
+
+    /* Hero */
+    .hero {
+        padding: 5rem 1.25rem 3.5rem;
+    }
+
+    .hero-title {
+        font-size: clamp(3.5rem, 14vw, 6rem);
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .hero-cta .btn {
+        text-align: center;
+        width: 100%;
+    }
+
+    /* About / stats */
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Dashboard */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .logout-area {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    /* Gate pass */
+    .gate-pass {
+        padding: 1.5rem;
+    }
+
+    .pass-info-row {
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .qr-container {
+        align-self: center;
+    }
+
+    /* Auth */
+    .auth-page {
+        padding: 1.5rem 1rem;
+        align-items: flex-start;
+        padding-top: 5rem;
+    }
+
+    /* Modal */
+    .modal-card {
+        max-width: 100%;
+        width: 100%;
+        max-height: 94vh;
+        border-radius: 18px 18px 0 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        padding: 1.5rem 1.1rem 2rem;
+    }
+
+    .member-id-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .verify-id-btn {
+        width: 100%;
+    }
+
+    /* Navbar */
+    .nav-links {
+        top: 54px;
+    }
+
+    /* Info bar */
+    .info-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 1rem;
+    }
+
+    .info-item {
+        font-size: 0.82rem;
+    }
+
+    /* Section headers */
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .section-desc {
+        font-size: 0.9rem;
+    }
+
+    /* Events grid (home page) */
+    .events-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: 3rem 1.25rem;
+    }
+
+    /* Page hero (events page) */
+    .page-hero {
+        padding: 5.5rem 1.25rem 2rem;
+    }
+}
+
+/* -------- Medium phone (≤480px) -------- */
+@media (max-width: 480px) {
+
+    .events-6-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 18vw, 5rem);
+        letter-spacing: 0.12em;
+    }
+
+    .hero-tagline {
+        font-size: 0.92rem;
+    }
+
+    .countdown-grid {
+        gap: 0.4rem;
+    }
+
+    .countdown-box {
+        min-width: 62px;
+        padding: 0.75rem 0.5rem;
+    }
+
+    .countdown-number {
+        font-size: 1.6rem;
+    }
+
+    .countdown-unit {
+        font-size: 0.55rem;
+    }
+
+    .stat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .about-grid {
+        gap: 1.5rem;
+    }
+
+    .pull-quote {
+        font-size: 0.9rem;
+        padding: 0.85rem 1rem;
+    }
+
+    /* Dashboard */
+    .dashboard-greeting {
+        font-size: 0.7rem;
+    }
+
+    .dashboard-name {
+        font-size: 1.5rem;
+    }
+
+    .reg-card {
+        padding: 1.25rem 1rem;
+    }
+
+    /* Gate pass */
+    .gate-pass {
+        padding: 1.25rem;
+    }
+
+    .pass-fest-name {
+        font-size: 1.3rem;
+    }
+
+    .pass-fest-sub {
+        font-size: 0.5rem;
+    }
+
+    .pass-id {
+        font-size: 1rem;
+    }
+
+    /* Modal */
+    .modal-card {
+        padding: 1.25rem 0.9rem 2rem;
+        max-height: 96vh;
+    }
+
+    .modal-ev-name {
+        font-size: 0.95rem;
+    }
+
+    /* Auth */
+    .auth-card {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .auth-logo-text {
+        font-size: 1.5rem;
+    }
+
+    /* Inputs */
+    .form-input,
+    .form-select {
+        font-size: 16px;
+        padding: 0.8rem 0.85rem;
+    }
+
+    /* Buttons */
+    .btn-lg {
+        padding: 0.9rem 1.25rem;
+        font-size: 0.9rem;
+    }
+
+    /* Footer */
+    footer {
+        padding: 2.5rem 1rem;
+        text-align: center;
+    }
+
+    .footer-logo {
+        font-size: 1.4rem;
+    }
+
+    /* My events section in dashboard */
+    .my-events-section {
+        padding: 0 1rem 3rem;
+    }
+
+    .my-events-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* -------- Large desktops / widescreen (≥1440px) -------- */
+@media (min-width: 1440px) {
+
+    .events-6-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.75rem;
+    }
+
+    .about-grid {
+        gap: 5rem;
+    }
+
+    section {
+        padding: 7rem 3rem;
+    }
+
+    .glass-card {
+        padding: 2.5rem;
+    }
+
+    .hero-title {
+        font-size: clamp(9rem, 12vw, 14rem);
+    }
+
+    .hero-version {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+    }
+
+    .section-title {
+        font-size: 3rem;
+    }
+
+    .dashboard-grid {
+        gap: 2.5rem;
+    }
+
+    .gate-pass {
+        padding: 2.5rem;
+    }
+
+    .auth-container {
+        max-width: 460px;
     }
 }

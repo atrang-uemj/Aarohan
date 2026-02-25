@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scanner — Aarohan 1.0 Attendance</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ===== SCANNER PAGE ===== */
+        .scanner-page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 5rem;
+        }
+
+        .scanner-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-top: 5rem;
+        }
+
+        .scanner-header .section-tag {
+            margin-bottom: 0.5rem;
+        }
+
+        .scanner-header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.6rem, 5vw, 2.4rem);
+            color: var(--gold);
+            letter-spacing: 0.08em;
+            margin: 0;
+        }
+
+        .scanner-header p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Camera box */
+        .cam-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto 1.5rem;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1.5px solid rgba(212, 165, 32, 0.25);
+            background: #060608;
+        }
+
+        #camVideo {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+        }
+
+        #camCanvas {
+            display: none;
+        }
+
+        /* scan-line animation */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: scanLine 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanLine {
+            0% {
+                top: 0;
+                opacity: 1;
+            }
+
+            50% {
+                top: calc(100% - 2px);
+                opacity: 0.8;
+            }
+
+            100% {
+                top: 0;
+                opacity: 1;
+            }
+        }
+
+        /* Corner brackets */
+        .cam-corners {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .cam-corners::before,
+        .cam-corners::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-color: var(--gold);
+            border-style: solid;
+        }
+
+        .cam-corners::before {
+            top: 12px;
+            left: 12px;
+            border-width: 2.5px 0 0 2.5px;
+            border-radius: 4px 0 0 0;
+        }
+
+        .cam-corners::after {
+            bottom: 12px;
+            right: 12px;
+            border-width: 0 2.5px 2.5px 0;
+            border-radius: 0 0 4px 0;
+        }
+
+        /* Additional corners */
+        .cam-wrap::before,
+        .cam-wrap::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-color: var(--gold);
+            border-style: solid;
+            z-index: 2;
+        }
+
+        .cam-wrap::before {
+            top: 12px;
+            right: 12px;
+            border-width: 2.5px 2.5px 0 0;
+            border-radius: 0 4px 0 0;
+        }
+
+        .cam-wrap::after {
+            bottom: 12px;
+            left: 12px;
+            border-width: 0 0 2.5px 2.5px;
+            border-radius: 0 0 0 4px;
+        }
+
+        /* Controls */
+        .scanner-controls {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Result card */
+        .scan-result {
+            display: none;
+            background: rgba(212, 165, 32, 0.06);
+            border: 1.5px solid rgba(212, 165, 32, 0.3);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .scan-result.show {
+            display: block;
+        }
+
+        .scan-result.error {
+            border-color: rgba(255, 80, 80, 0.45);
+            background: rgba(255, 80, 80, 0.06);
+        }
+
+        .scan-result.already {
+            border-color: rgba(255, 200, 50, 0.4);
+            background: rgba(255, 200, 50, 0.06);
+        }
+
+        .result-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 0.25rem;
+        }
+
+        .result-meta {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.25rem;
+            margin-top: 0.35rem;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+
+        .badge-success {
+            background: rgba(80, 220, 120, 0.15);
+            color: #50dc78;
+            border: 1px solid rgba(80, 220, 120, 0.3);
+        }
+
+        .badge-already {
+            background: rgba(255, 200, 50, 0.15);
+            color: #ffc832;
+            border: 1px solid rgba(255, 200, 50, 0.3);
+        }
+
+        .badge-error {
+            background: rgba(255, 80, 80, 0.15);
+            color: #ff5050;
+            border: 1px solid rgba(255, 80, 80, 0.3);
+        }
+
+        /* Manual search */
+        .manual-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .manual-row {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .manual-row .form-input {
+            flex: 1;
+        }
+
+        /* Attendance list */
+        .attendance-section {
+            margin-top: 1rem;
+        }
+
+        .attendance-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .attendance-count {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .attendance-count span {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.08em;
+            display: block;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #50dc78;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            animation: pulse 1.4s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(0.7);
+            }
+        }
+
+        /* Table */
+        .attend-table-wrap {
+            overflow: hidden;
+            border-radius: 14px;
+            border: 1px solid rgba(212, 165, 32, 0.15);
+        }
+
+        table.attend-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .attend-table thead th {
+            background: rgba(212, 165, 32, 0.08);
+            color: var(--gold-light);
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(212, 165, 32, 0.12);
+        }
+
+        .attend-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.2s;
+        }
+
+        .attend-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .attend-table tbody tr:hover {
+            background: rgba(212, 165, 32, 0.04);
+        }
+
+        .attend-table tbody tr.new-row {
+            animation: rowPop 0.5s ease;
+        }
+
+        @keyframes rowPop {
+            0% {
+                background: rgba(80, 220, 120, 0.15);
+            }
+
+            100% {
+                background: transparent;
+            }
+        }
+
+        .attend-table td {
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+
+        .attend-table td:last-child {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .td-id {
+            font-family: 'Courier New', monospace;
+            font-size: 0.78rem;
+            color: var(--gold-light);
+        }
+
+        .td-name {
+            font-weight: 600;
+        }
+
+        /* Empty state */
+        .attend-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .attend-empty .empty-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Auth gate */
+        #authGate {
+            display: none;
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+
+        /* Logout bar */
+        .scanner-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(212, 165, 32, 0.05);
+            border: 1px solid rgba(212, 165, 32, 0.12);
+            border-radius: 10px;
+            font-size: 0.82rem;
+        }
+
+        .scanner-user {
+            color: var(--text-muted);
+        }
+
+        .scanner-user strong {
+            color: var(--gold-light);
+        }
+
+        /* Export btn */
+        .btn-xs {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+
+            .attend-table thead th:nth-child(2),
+            .attend-table td:nth-child(2) {
+                display: none;
+            }
+
+            .manual-row {
+                flex-direction: column;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== PAGE PRELOADER ===== -->
+    <div id="pagePreloader"
+        style="position:fixed;inset:0;z-index:99999;background:#030305;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;transition:opacity 0.6s ease;">
+        <img src="Atrang-removebg-preview.png" alt="Atrang"
+            style="width:110px;height:110px;object-fit:contain;animation:atrangSpin 1.4s cubic-bezier(0.4,0,0.2,1) infinite;filter:drop-shadow(0 0 22px rgba(212,165,32,0.6));" />
+        <span
+            style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.35em;color:rgba(212,165,32,0.55);text-transform:uppercase;">Loading…</span>
+    </div>
+    <style>
+        @keyframes atrangSpin {
+            0% {
+                transform: rotate(0deg) scale(1)
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.08)
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1)
+            }
+        }
+    </style>
+    <script>
+        window.addEventListener('load', () => { const pl = document.getElementById('pagePreloader'); if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 650); } });
+        setTimeout(() => { const pl = document.getElementById('pagePreloader'); if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 650); } }, 3000);
+    </script>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">AAROHAN</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="scanner.html" class="active">Scanner</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <!-- AUTH GATE (shown if not logged in) -->
+    <div id="authGate">
+        <p style="font-size:2rem;margin-bottom:1rem;">🔒</p>
+        <p style="color:var(--text-muted);margin-bottom:1.5rem;">You must be logged in to use the scanner.</p>
+        <a href="login.html" class="btn btn-primary">Login</a>
+    </div>
+
+    <!-- MAIN SCANNER UI -->
+    <div class="scanner-page" id="scannerUI" style="display:none">
+
+        <div class="scanner-header">
+            <span class="section-tag">✦ Venue Check-In</span>
+            <h1>Attendance Scanner</h1>
+            <p>Scan an attendee's Gate Pass QR code to mark their arrival.</p>
+        </div>
+
+        <!-- Top bar: user info + export -->
+        <div class="scanner-top-bar">
+            <div class="scanner-user">
+                Logged in as <strong id="adminEmail">—</strong>
+            </div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <button class="btn btn-outline btn-xs" onclick="exportCSV()">⬇ Export CSV</button>
+                <button class="btn btn-outline btn-xs" onclick="toggleCamera()" id="camToggleBtn">📷 Start
+                    Camera</button>
+            </div>
+        </div>
+
+        <!-- Camera -->
+        <div class="cam-wrap" id="camWrap" style="display:none">
+            <video id="camVideo" playsinline autoplay muted></video>
+            <canvas id="camCanvas"></canvas>
+            <div class="scan-line"></div>
+            <div class="cam-corners"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="scanner-controls">
+            <button class="btn btn-primary" onclick="toggleCamera()" id="startBtn">📷 Start Camera</button>
+            <button class="btn btn-outline" onclick="stopCamera()" id="stopBtn" style="display:none">⏹ Stop</button>
+        </div>
+
+        <!-- Scan result -->
+        <div id="scanResult" class="scan-result"></div>
+
+        <!-- Manual search -->
+        <div class="manual-section">
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.6rem;letter-spacing:0.05em;">OR ENTER
+                GATE PASS ID MANUALLY</p>
+            <div class="manual-row">
+                <input type="text" id="manualInput" class="form-input" placeholder="e.g. ATNG-1234"
+                    onkeydown="if(event.key==='Enter') manualCheckIn()" />
+                <button class="btn btn-primary" onclick="manualCheckIn()">Check In</button>
+            </div>
+        </div>
+
+        <!-- Attendance list -->
+        <div class="attendance-section">
+            <div class="attendance-header">
+                <div>
+                    <div class="attendance-count">
+                        <span id="arrivalCount">0</span>
+                        <span><span class="live-dot"></span>ARRIVED</span>
+                    </div>
+                </div>
+                <input type="text" id="searchInput" class="form-input"
+                    style="max-width:220px;padding:0.55rem 0.9rem;font-size:0.82rem;" placeholder="🔍 Search name / ID…"
+                    oninput="renderTable()" />
+            </div>
+
+            <div class="attend-table-wrap">
+                <table class="attend-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Gate Pass ID</th>
+                            <th>Name</th>
+                            <th>College</th>
+                            <th>Arrived At</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceBody">
+                        <tr>
+                            <td colspan="5">
+                                <div class="attend-empty">
+                                    <div class="empty-icon">📭</div>
+                                    No arrivals yet. Start scanning!
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsQR (QR decoder) -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+    <!-- Firebase + logic -->
+    <script type="module">
+        import { auth, db } from './firebase.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import {
+            collection, doc, setDoc, getDoc, query, orderBy,
+            onSnapshot, serverTimestamp, getDocs, where
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // ================================================================
+        //  State
+        // ================================================================
+        let currentUser = null;
+        let allArrivals = [];   // full list from Firestore
+        let videoStream = null;
+        let scanning = false;
+        let lastScanned = '';   // debounce — don't double-scan same ID within 3s
+        let lastScannedTime = 0;
+
+        // ================================================================
+        //  Auth gate
+        // ================================================================
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authGate').style.display = 'none';
+                document.getElementById('scannerUI').style.display = 'block';
+                document.getElementById('adminEmail').textContent = user.email || user.displayName || 'Admin';
+                startRealtimeList();
+            } else {
+                document.getElementById('authGate').style.display = 'block';
+                document.getElementById('scannerUI').style.display = 'none';
+            }
+        });
+
+        // ================================================================
+        //  Check-in logic
+        // ================================================================
+        async function checkIn(gatePassID) {
+            gatePassID = gatePassID.trim().toUpperCase();
+            if (!gatePassID) return;
+
+            const resultEl = document.getElementById('scanResult');
+
+            // Look up participant
+            const partSnap = await getDocs(
+                query(collection(db, 'participants'), where('gatePassID', '==', gatePassID))
+            );
+
+            if (partSnap.empty) {
+                showResult('error', `❌ Gate Pass <strong>${gatePassID}</strong> not found in the system.`);
+                beep('error');
+                return;
+            }
+
+            const person = partSnap.docs[0].data();
+
+            // Check if already marked
+            const attRef = doc(db, 'attendance', gatePassID);
+            const existing = await getDoc(attRef);
+
+            if (existing.exists()) {
+                const d = existing.data();
+                const at = d.arrivedAt?.toDate ? d.arrivedAt.toDate().toLocaleTimeString('en-IN') : '—';
+                showResult('already',
+                    `⚠️ <strong>${person.name}</strong> already checked in at ${at}.<br>
+                     <span style="color:var(--text-muted);font-size:0.8rem">${person.college} · ${gatePassID}</span>`
+                );
+                beep('already');
+                return;
+            }
+
+            // Mark arrival
+            await setDoc(attRef, {
+                gatePassID,
+                name: person.name,
+                college: person.college || '—',
+                arrivedAt: serverTimestamp(),
+                markedBy: currentUser.uid,
+            });
+
+            showResult('success',
+                `✅ <strong>${person.name}</strong> checked in!<br>
+                 <span style="color:var(--text-muted);font-size:0.8rem">${person.college} · ${gatePassID}</span>`
+            );
+            beep('success');
+        }
+
+        function showResult(type, html) {
+            const el = document.getElementById('scanResult');
+            el.className = `scan-result show ${type}`;
+            el.innerHTML = html;
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => { el.className = 'scan-result'; }, 5000);
+        }
+
+        // Expose for manual input button
+        window.manualCheckIn = () => {
+            const val = document.getElementById('manualInput').value.trim();
+            if (!val) return;
+            checkIn(val);
+            document.getElementById('manualInput').value = '';
+        };
+
+        // ================================================================
+        //  Real-time attendance list
+        // ================================================================
+        function startRealtimeList() {
+            const q = query(collection(db, 'attendance'), orderBy('arrivedAt', 'desc'));
+            onSnapshot(q, (snap) => {
+                allArrivals = snap.docs.map(d => d.data());
+                document.getElementById('arrivalCount').textContent = allArrivals.length;
+                renderTable();
+            });
+        }
+
+        window.renderTable = () => {
+            const search = (document.getElementById('searchInput').value || '').toLowerCase();
+            const filtered = allArrivals.filter(r =>
+                r.name?.toLowerCase().includes(search) ||
+                r.gatePassID?.toLowerCase().includes(search) ||
+                r.college?.toLowerCase().includes(search)
+            );
+
+            const tbody = document.getElementById('attendanceBody');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5">
+                    <div class="attend-empty"><div class="empty-icon">📭</div>
+                    ${search ? 'No results found.' : 'No arrivals yet. Start scanning!'}</div>
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((r, i) => {
+                const time = r.arrivedAt?.toDate
+                    ? r.arrivedAt.toDate().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+                    : '—';
+                return `<tr class="${i === 0 ? 'new-row' : ''}">
+                    <td style="color:var(--text-muted);font-size:0.78rem">${filtered.length - i}</td>
+                    <td class="td-id">${r.gatePassID}</td>
+                    <td class="td-name">${r.name}</td>
+                    <td style="color:var(--text-muted)">${r.college}</td>
+                    <td>${time}</td>
+                </tr>`;
+            }).join('');
+        };
+
+        // ================================================================
+        //  Camera + jsQR scanning
+        // ================================================================
+        window.toggleCamera = async () => {
+            if (videoStream) { stopCamera(); return; }
+
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 1280 } }
+                });
+                const video = document.getElementById('camVideo');
+                video.srcObject = videoStream;
+                document.getElementById('camWrap').style.display = 'block';
+                document.getElementById('startBtn').style.display = 'none';
+                document.getElementById('stopBtn').style.display = 'inline-flex';
+                document.getElementById('camToggleBtn').textContent = '⏹ Stop Camera';
+                scanning = true;
+                requestAnimationFrame(scanFrame);
+            } catch (e) {
+                alert('Camera permission denied. Please allow camera access or use manual entry.');
+            }
+        };
+
+        window.stopCamera = () => {
+            if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; }
+            scanning = false;
+            document.getElementById('camWrap').style.display = 'none';
+            document.getElementById('startBtn').style.display = 'inline-flex';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('camToggleBtn').textContent = '📷 Start Camera';
+        };
+
+        function scanFrame() {
+            if (!scanning) return;
+            const video = document.getElementById('camVideo');
+            const canvas = document.getElementById('camCanvas');
+            if (video.readyState !== video.HAVE_ENOUGH_DATA) { requestAnimationFrame(scanFrame); return; }
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imgData.data, imgData.width, imgData.height, { inversionAttempts: 'dontInvert' });
+
+            if (code && code.data) {
+                const now = Date.now();
+                if (code.data !== lastScanned || now - lastScannedTime > 3000) {
+                    lastScanned = code.data;
+                    lastScannedTime = now;
+                    checkIn(code.data);
+                }
+            }
+            requestAnimationFrame(scanFrame);
+        }
+
+        // ================================================================
+        //  Export CSV
+        // ================================================================
+        window.exportCSV = () => {
+            if (!allArrivals.length) { alert('No attendance data to export.'); return; }
+            const rows = [['#', 'Gate Pass ID', 'Name', 'College', 'Arrived At']];
+            allArrivals.forEach((r, i) => {
+                const t = r.arrivedAt?.toDate ? r.arrivedAt.toDate().toLocaleString('en-IN') : '—';
+                rows.push([allArrivals.length - i, r.gatePassID, r.name, r.college, t]);
+            });
+            const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+            const a = document.createElement('a');
+            a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+            a.download = `Aarohan1_Attendance_${Date.now()}.csv`;
+            a.click();
+        };
+
+        // ================================================================
+        //  Audio feedback
+        // ================================================================
+        function beep(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = type === 'success' ? 880 : type === 'already' ? 660 : 300;
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.25);
+            } catch (_) { }
+        }
+
+        // Hamburger
+        document.getElementById('hamburger').addEventListener('click', function () {
+            this.classList.toggle('open');
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+    </script>
+</body>
+
+</html>

@@ -215,6 +215,34 @@
 
 <body>
 
+    <!-- ===== PAGE PRELOADER ===== -->
+    <div id="pagePreloader"
+        style="position:fixed;inset:0;z-index:99999;background:#030305;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;transition:opacity 0.6s ease;">
+        <img src="Atrang-removebg-preview.png" alt="Atrang"
+            style="width:110px;height:110px;object-fit:contain;animation:atrangSpin 1.4s cubic-bezier(0.4,0,0.2,1) infinite;filter:drop-shadow(0 0 22px rgba(212,165,32,0.6));" />
+        <span
+            style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.35em;color:rgba(212,165,32,0.55);text-transform:uppercase;">Loading…</span>
+    </div>
+    <style>
+        @keyframes atrangSpin {
+            0% {
+                transform: rotate(0deg) scale(1)
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.08)
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1)
+            }
+        }
+    </style>
+    <script>
+        window.addEventListener('load', () => { const pl = document.getElementById('pagePreloader'); if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 650); } });
+        setTimeout(() => { const pl = document.getElementById('pagePreloader'); if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 650); } }, 3000);
+    </script>
+
     <!-- NAVBAR -->
     <nav class="navbar">
         <a href="index.html" class="nav-logo">AAROHAN</a>

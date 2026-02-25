@@ -381,6 +381,34 @@
 
 <body>
 
+    <!-- ===== PAGE PRELOADER ===== -->
+    <div id="pagePreloader"
+        style="position:fixed;inset:0;z-index:99999;background:#030305;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;transition:opacity 0.6s ease;">
+        <img src="Atrang-removebg-preview.png" alt="Atrang"
+            style="width:110px;height:110px;object-fit:contain;animation:atrangSpin 1.4s cubic-bezier(0.4,0,0.2,1) infinite;filter:drop-shadow(0 0 22px rgba(212,165,32,0.6));" />
+        <span
+            style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.35em;color:rgba(212,165,32,0.55);text-transform:uppercase;">Loading…</span>
+    </div>
+    <style>
+        @keyframes atrangSpin {
+            0% {
+                transform: rotate(0deg) scale(1)
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.08)
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1)
+            }
+        }
+    </style>
+    <script>
+        window.addEventListener('load', () => { const pl = document.getElementById('pagePreloader'); if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 650); } });
+        setTimeout(() => { const pl = document.getElementById('pagePreloader'); if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 650); } }, 3000);
+    </script>
+
     <!-- NAVBAR -->
     <nav class="navbar">
         <a href="index.html" class="nav-logo">AAROHAN</a>
@@ -944,14 +972,30 @@
                     }
                     members = [soloVerifiedData];
 
-                    // Duplicate check — single-field query (no composite index needed)
-                    const dupSnap = await getDocs(
-                        query(collection(db, 'eventRegistrations'),
-                            where('leadGatePassID', '==', soloVerifiedData.gatePassID))
-                    );
-                    const alreadyRegistered = dupSnap.docs.some(d => d.data().event === currentEvent);
-                    if (alreadyRegistered) {
-                        showModalMsg('error', `You are already registered for ${currentEvent}.`);
+                    // Duplicate check — block if this user is already registered as lead OR member
+                    let alreadyIn = false;
+                    try {
+                        const dupSnap = await getDocs(
+                            query(collection(db, 'eventRegistrations'),
+                                where('leadGatePassID', '==', soloVerifiedData.gatePassID))
+                        );
+                        alreadyIn = dupSnap.docs.some(d => d.data().event === currentEvent);
+                        // Also check if they appear as a non-lead member by uid
+                        if (!alreadyIn) {
+                            const dupSnap2 = await getDocs(
+                                query(collection(db, 'eventRegistrations'),
+                                    where('registeredByUid', '==', currentUser.uid),
+                                    where('event', '==', currentEvent))
+                            );
+                            alreadyIn = !dupSnap2.empty;
+                        }
+                    } catch (dupErr) {
+                        // If we can't check, block registration to be safe
+                        showModalMsg('error', 'Could not verify registration status. Please try again.');
+                        btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
+                    }
+                    if (alreadyIn) {
+                        showModalMsg('error', `⚠ You are already registered for ${currentEvent}.`);
                         btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
                     }
 
@@ -998,16 +1042,37 @@
 
                     const leadId = members[0].gatePassID;
 
-                    // Duplicate check — single-field query (no composite index needed)
-                    const dupSnap = await getDocs(
-                        query(collection(db, 'eventRegistrations'),
-                            where('leadGatePassID', '==', leadId))
-                    );
-                    const alreadyRegistered = dupSnap.docs.some(d => d.data().event === currentEvent);
-                    if (alreadyRegistered) {
-                        showModalMsg('error', `This team is already registered for ${currentEvent}.`);
+                    // Duplicate check — block if any member is already in this event
+                    let alreadyIn = false;
+                    try {
+                        for (const m of members) {
+                            const dupSnap = await getDocs(
+                                query(collection(db, 'eventRegistrations'),
+                                    where('leadGatePassID', '==', m.gatePassID))
+                            );
+                            if (dupSnap.docs.some(d => d.data().event === currentEvent)) {
+                                alreadyIn = true;
+                                showModalMsg('error', `⚠ Member ${m.name} (${m.gatePassID}) is already registered for ${currentEvent}.`);
+                                break;
+                            }
+                        }
+                        // Also check by registering uid
+                        if (!alreadyIn) {
+                            const dupSnap2 = await getDocs(
+                                query(collection(db, 'eventRegistrations'),
+                                    where('registeredByUid', '==', currentUser.uid),
+                                    where('event', '==', currentEvent))
+                            );
+                            if (!dupSnap2.empty) {
+                                alreadyIn = true;
+                                showModalMsg('error', `⚠ You have already registered a team for ${currentEvent}.`);
+                            }
+                        }
+                    } catch (dupErr) {
+                        showModalMsg('error', 'Could not verify registration status. Please try again.');
                         btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return;
                     }
+                    if (alreadyIn) { btn.disabled = false; btn.innerHTML = '✦ Confirm Registration'; return; }
 
                     await addDoc(collection(db, 'eventRegistrations'), {
                         event: currentEvent,
