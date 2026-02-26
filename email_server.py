@@ -208,6 +208,130 @@ def health():
     return jsonify({"status": "ok", "service": "Aarohan Email Server"})
 
 
+def build_welcome_html_body(to_name):
+    """Render the branded HTML email body for welcome emails."""
+    return f"""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body style="margin:0;padding:0;background:#0d0020;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0d0020;padding:40px 0;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0"
+             style="background:#12002e;border:1px solid rgba(212,165,32,0.3);
+                    border-radius:4px;overflow:hidden;max-width:100%;">
+
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#1a0040,#0d0020);
+                     padding:32px 36px 24px;
+                     border-bottom:1px solid rgba(212,165,32,0.2);">
+            <div style="font-family:Georgia,serif;font-size:26px;font-weight:bold;
+                        letter-spacing:4px;color:#ffffff;">AAROHAN</div>
+            <div style="font-size:11px;letter-spacing:3px;
+                        color:rgba(212,165,32,0.7);margin-top:4px;">
+              1.0 &nbsp;&middot;&nbsp; THE BEGINNING OF A LEGACY
+            </div>
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px 36px;">
+            <p style="color:#d4a520;font-size:13px;letter-spacing:2px;
+                      text-transform:uppercase;margin:0 0 8px;">
+              Welcome to the Saga
+            </p>
+            <h1 style="color:#ffffff;font-size:22px;margin:0 0 20px;font-family:Georgia,serif;">
+              Welcome, {to_name}! &#127881;
+            </h1>
+            <p style="color:#ccc;font-size:15px;line-height:1.7;margin:0 0 28px;">
+              You have successfully signed in to the <strong style="color:#ffd700;">Aarohan 1.0</strong> portal.
+            </p>
+            <p style="color:#ccc;font-size:15px;line-height:1.7;margin:0 0 28px;">
+              You can now browse and register for events, form teams, and view your digital Gate Passes directly from your dashboard.
+            </p>
+
+            <p style="color:#888;font-size:13px;line-height:1.7;">
+              &#8505;&#65039; If you face any issues, feel free to reach out to the cultural committee.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background:rgba(0,0,0,0.3);padding:20px 36px;
+                     border-top:1px solid rgba(212,165,32,0.1);text-align:center;">
+            <p style="color:rgba(212,165,32,0.5);font-size:11px;letter-spacing:2px;margin:0;">
+              AAROHAN 1.0 &middot; UEM JAIPUR &middot; 2026
+            </p>
+            <p style="color:#555;font-size:11px;margin:8px 0 0;">
+              This is an automated confirmation. Please do not reply.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>"""
+
+
+@app.route('/send-welcome', methods=['POST'])
+def send_welcome_email():
+    """
+    Accepts JSON:
+    {
+      "to_email":    "student@example.com",
+      "to_name":     "Rahul Sharma"
+    }
+    """
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"ok": False, "error": "No JSON body"}), 400
+
+    to_email = data.get("to_email", "").strip()
+    to_name  = data.get("to_name", "Participant")
+
+    if not to_email:
+        return jsonify({"ok": False, "error": "to_email is required"}), 400
+
+    try:
+        msg = EmailMessage()
+        msg["Subject"] = f"Welcome to Aarohan 1.0!"
+        msg["From"]    = f"Aarohan 1.0 <{EMAIL_ADDRESS}>"
+        msg["To"]      = to_email
+
+        # Plain-text fallback
+        msg.set_content(
+            f"Hi {to_name},\n\n"
+            f"You have successfully signed in to the Aarohan 1.0 portal.\n"
+            f"You can now register for events and view your Gate Passes from the dashboard.\n\n"
+            f"— Aarohan 1.0 Team"
+        )
+
+        # Rich HTML version
+        msg.add_alternative(
+            build_welcome_html_body(to_name),
+            subtype="html"
+        )
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+            smtp.send_message(msg)
+
+        print(f"[✓] Welcome email sent → {to_email}")
+        return jsonify({"ok": True})
+
+    except Exception as e:
+        print(f"[✗] Welcome email failed → {to_email}: {e}")
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+
 if __name__ == "__main__":
     print("=" * 50)
     print("  Aarohan 1.0 — Email Server")
