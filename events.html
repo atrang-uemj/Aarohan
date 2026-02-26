@@ -458,8 +458,8 @@
                     <span class="ev-chip">⏱ 3–5 mins</span>
                     <span class="ev-chip">👤 Solo</span>
                 </div>
-                <button class="btn btn-primary ev-register-btn" onclick="openModal('Solo Singing')">Register Now
-                    →</button>
+                <a href="solo_singing_details.html" class="btn btn-primary ev-register-btn"
+                    style="text-align:center;text-decoration:none;display:block;">Explore →</a>
             </div>
 
             <!-- Solo Dance -->
@@ -478,8 +478,8 @@
                     <span class="ev-chip">⏱ 3–6 mins</span>
                     <span class="ev-chip">👤 Solo</span>
                 </div>
-                <button class="btn btn-primary ev-register-btn" onclick="openModal('Solo Dance')">Register Now
-                    →</button>
+                <a href="solo_dance_details.html" class="btn btn-primary ev-register-btn"
+                    style="text-align:center;text-decoration:none;display:block;">Explore →</a>
             </div>
 
             <!-- Band -->
@@ -498,7 +498,8 @@
                     <span class="ev-chip">⏱ 8–12 mins</span>
                     <span class="ev-chip">👥 3–8 Members</span>
                 </div>
-                <button class="btn btn-primary ev-register-btn" onclick="openModal('Band')">Register Now →</button>
+                <a href="band_details.html" class="btn btn-primary ev-register-btn"
+                    style="text-align:center;text-decoration:none;display:block;">Explore →</a>
             </div>
 
             <!-- Group Dance -->
@@ -517,8 +518,8 @@
                     <span class="ev-chip">⏱ 5–10 mins</span>
                     <span class="ev-chip">👥 4–15 Members</span>
                 </div>
-                <button class="btn btn-primary ev-register-btn" onclick="openModal('Group Dance')">Register Now
-                    →</button>
+                <a href="group_dance_details.html" class="btn btn-primary ev-register-btn"
+                    style="text-align:center;text-decoration:none;display:block;">Explore →</a>
             </div>
 
             <!-- T-shirt Painting -->
@@ -537,8 +538,8 @@
                     <span class="ev-chip">⏱ 60 mins</span>
                     <span class="ev-chip">👥 1–2 Members</span>
                 </div>
-                <button class="btn btn-primary ev-register-btn" onclick="openModal('T-Shirt Painting')">Register Now
-                    →</button>
+                <a href="tshirt_painting_details.html" class="btn btn-primary ev-register-btn"
+                    style="text-align:center;text-decoration:none;display:block;">Explore →</a>
             </div>
 
             <!-- Nukkad Natak -->
@@ -557,8 +558,8 @@
                     <span class="ev-chip">⏱ 10–15 mins</span>
                     <span class="ev-chip">👥 5–20 Members</span>
                 </div>
-                <button class="btn btn-primary ev-register-btn" onclick="openModal('Nukkad Natak')">Register Now
-                    →</button>
+                <a href="nukkad_natak_details.html" class="btn btn-primary ev-register-btn"
+                    style="text-align:center;text-decoration:none;display:block;">Explore →</a>
             </div>
 
         </div>
@@ -708,6 +709,12 @@
                 } catch (_) { /* silently skip */ }
             } else {
                 document.getElementById('loginBanner').style.display = 'block';
+            }
+            // After auth resolves, check if we were redirected from band_details to open a specific event
+            const pendingEvent = sessionStorage.getItem('aarohan_open_event');
+            if (pendingEvent && EVENTS[pendingEvent]) {
+                sessionStorage.removeItem('aarohan_open_event');
+                setTimeout(() => openModal(pendingEvent), 600);
             }
         });
 
@@ -1250,6 +1257,13 @@
             // Save state before navigating away
             window.addEventListener('beforeunload', save);
             document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+
+            // Ensure music resumes when navigating "Back" (BFCache)
+            window.addEventListener('pageshow', (e) => {
+                if (e.persisted && sessionStorage.getItem(KEY_P) !== 'false' && !savedMuted) {
+                    audio.play().catch(() => { });
+                }
+            });
 
             function save() {
                 sessionStorage.setItem(KEY_T, audio.currentTime);

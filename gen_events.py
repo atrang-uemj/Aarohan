@@ -1,0 +1,767 @@
+import os
+from string import Template
+
+template = Template("""<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${title} — Aarohan 1.0 | UEM Jaipur</title>
+    <meta name="description"
+        content="${title} details for Aarohan 1.0 — rules, prizes, and how to register for the ${title} event at UEM Jaipur." />
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+        /* ===== DETAILS PAGE ===== */
+        .band-hero {
+            position: relative;
+            z-index: 1;
+            padding: 7rem 2rem 4rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .band-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 60% at 50% 0%, rgba(192, 132, 252, 0.14) 0%, transparent 65%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(212, 165, 32, 0.12) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .band-hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .band-icon-ring {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: rgba(212, 165, 32, 0.06);
+            border: 1.5px solid rgba(212, 165, 32, 0.35);
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 40px rgba(212, 165, 32, 0.25);
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 0 30px rgba(212, 165, 32, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(212, 165, 32, 0.45); }
+        }
+
+        .band-hero h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.8rem, 8vw, 5.5rem);
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            background: var(--grad-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 40px rgba(212, 165, 32, 0.35));
+        }
+
+        .band-hero-sub {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .band-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        .band-chip {
+            padding: 0.3rem 1rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid rgba(212, 165, 32, 0.25);
+            color: var(--gold);
+            background: rgba(212, 165, 32, 0.06);
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+        }
+
+        /* ===== DETAILS CONTENT ===== */
+        .band-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3.5rem 2rem 5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .band-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .band-detail-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 165, 32, 0.1);
+            border-top: 2px solid;
+            border-image: var(--grad-gold) 1;
+            padding: 1.75rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .band-detail-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--grad-gold);
+            opacity: 0.4;
+        }
+
+        .band-detail-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 165, 32, 0.25);
+            box-shadow: var(--shadow-gold);
+            background: rgba(212, 165, 32, 0.03);
+        }
+
+        .band-detail-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .bdc-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bdc-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(212, 165, 32, 0.3), transparent);
+        }
+
+        .bdc-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            margin-bottom: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .bdc-body {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+
+        .bdc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .bdc-list li {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            padding-left: 1.4rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .bdc-list li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-size: 0.6rem;
+            top: 0.3rem;
+        }
+
+        .prize-tier {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(212, 165, 32, 0.12);
+            background: rgba(212, 165, 32, 0.03);
+            margin-bottom: 0.6rem;
+            transition: var(--transition-fast);
+        }
+
+        .prize-tier:last-child {
+            margin-bottom: 0;
+        }
+
+        .prize-tier:hover {
+            background: rgba(212, 165, 32, 0.07);
+            border-color: rgba(212, 165, 32, 0.25);
+        }
+
+        .prize-medal {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .prize-info {
+            flex: 1;
+        }
+
+        .prize-place {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 0.08em;
+        }
+
+        .prize-amount {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.15rem;
+        }
+
+        .band-cta {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 0 2rem 5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .band-cta-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+
+        .band-cta-divider::before,
+        .band-cta-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 165, 32, 0.3), transparent);
+        }
+
+        .band-cta p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.75;
+        }
+
+        .band-cta-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .contact-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.9rem;
+            border: 1px solid rgba(212, 165, 32, 0.2);
+            background: rgba(212, 165, 32, 0.04);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+
+        .contact-pill:hover {
+            background: rgba(212, 165, 32, 0.1);
+            border-color: rgba(212, 165, 32, 0.4);
+            color: var(--gold-light);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: var(--transition-fast);
+            margin-bottom: 0.5rem;
+        }
+
+        .back-link:hover {
+            color: var(--gold);
+        }
+
+        .page-hero {
+            padding-top: 8rem;
+        }
+
+        @media (max-width: 768px) {
+            .band-hero h1 {
+                font-size: clamp(2.2rem, 10vw, 3.5rem);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== PAGE PRELOADER ===== -->
+    <div id="pagePreloader"
+        style="position:fixed;inset:0;z-index:99999;background:#030305;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;transition:opacity 0.6s ease;">
+        <img src="Atrang-removebg-preview.png" alt="Atrang"
+            style="width:110px;height:110px;object-fit:contain;animation:atrangSpin 1.4s cubic-bezier(0.4,0,0.2,1) infinite;filter:drop-shadow(0 0 22px rgba(212,165,32,0.6));" />
+        <span
+            style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.35em;color:rgba(212,165,32,0.55);text-transform:uppercase;">Loading…</span>
+    </div>
+    <style>
+        @keyframes atrangSpin {
+            0% { transform: rotate(0deg) scale(1) }
+            50% { transform: rotate(180deg) scale(1.08) }
+            100% { transform: rotate(360deg) scale(1) }
+        }
+    </style>
+    <script>
+        window.addEventListener('load', () => { const pl = document.getElementById('pagePreloader'); if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 650); } });
+        setTimeout(() => { const pl = document.getElementById('pagePreloader'); if (pl) { pl.style.opacity = '0'; setTimeout(() => pl.remove(), 650); } }, 3000);
+    </script>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">AAROHAN</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html" class="active">Events</a></li>
+            <li><a href="login.html" id="navLoginBtn">Login</a></li>
+            <li><a href="dashboard.html" id="navDashBtn" style="display:none">Dashboard</a></li>
+            <li><button class="btn btn-primary btn-sm" id="navRegBtn"
+                    onclick="location.href='login.html'">Register</button></li>
+        </ul>
+    </nav>
+
+    <!-- ===== EVENT HERO ===== -->
+    <div class="band-hero">
+        <div class="band-hero-inner">
+            <a href="events.html" class="back-link">← Back to Events</a>
+            <br /><br />
+            <span class="section-tag">✦ Aarohan 1.0 &nbsp;·&nbsp; ${title} Competition</span>
+            <br /><br />
+            <div class="band-icon-ring">${icon}</div>
+            <h1>${title}</h1>
+            <p class="band-hero-sub">${description}</p>
+            <div class="band-chip-row">
+                <span class="band-chip">🏆 Prize Pool: TBA</span>
+                <span class="band-chip">⏱ ${duration}</span>
+                <span class="band-chip">👥 ${members}</span>
+                <span class="band-chip">🎤 Live Performance</span>
+                <span class="band-chip">📅 Aarohan 1.0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DETAIL CARDS GRID ===== -->
+    <div class="band-content">
+        <!-- About -->
+        <div class="band-detail-card full-width">
+            <p class="bdc-label">✦ &nbsp;About the Event</p>
+            <h2 class="bdc-title">Showcase Your Talent</h2>
+            <p class="bdc-body">
+                ${about}
+            </p>
+        </div>
+
+        <!-- Rules -->
+        <div class="band-detail-card">
+            <p class="bdc-label">✦ &nbsp;Rules &amp; Guidelines</p>
+            <ul class="bdc-list">
+                ${rules}
+            </ul>
+        </div>
+
+        <!-- Equipment/Requirements -->
+        <div class="band-detail-card">
+            <p class="bdc-label">✦ &nbsp;Requirements &amp; Setup</p>
+            <ul class="bdc-list">
+                ${requirements}
+            </ul>
+        </div>
+
+        <!-- Judging -->
+        <div class="band-detail-card">
+            <p class="bdc-label">✦ &nbsp;Judging Criteria</p>
+            <ul class="bdc-list">
+                ${judging}
+            </ul>
+        </div>
+
+        <!-- Important Dates -->
+        <div class="band-detail-card">
+            <p class="bdc-label">✦ &nbsp;Important Dates</p>
+            <ul class="bdc-list">
+                <li><strong>Registration Opens:</strong> Now</li>
+                <li><strong>Registration Closes:</strong> TBA</li>
+                <li><strong>Performance:</strong> Aarohan 1.0 Main Stage</li>
+                <li><strong>Results &amp; Prize Distribution:</strong> Closing ceremony</li>
+            </ul>
+        </div>
+
+        <!-- Prize Pool -->
+        <div class="band-detail-card">
+            <p class="bdc-label">✦ &nbsp;Prize Pool</p>
+            <div class="prize-tier">
+                <span class="prize-medal">🥇</span>
+                <div class="prize-info">
+                    <div class="prize-place">First Place</div>
+                    <div class="prize-amount">Prize + Trophy + Certificate of Excellence</div>
+                </div>
+            </div>
+            <div class="prize-tier">
+                <span class="prize-medal">🥈</span>
+                <div class="prize-info">
+                    <div class="prize-place">Second Place</div>
+                    <div class="prize-amount">Prize + Trophy + Certificate of Excellence</div>
+                </div>
+            </div>
+            <div class="prize-tier">
+                <span class="prize-medal">🥉</span>
+                <div class="prize-info">
+                    <div class="prize-place">Third Place</div>
+                    <div class="prize-amount">Prize + Medal + Certificate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="band-detail-card full-width">
+            <p class="bdc-label">✦ &nbsp;Contact &amp; Queries</p>
+            <p class="bdc-body" style="margin-bottom:1rem;">
+                For any queries related to ${title}, feel free to reach out to the Aarohan 1.0 cultural team.
+            </p>
+            <div class="contact-row">
+                <a href="mailto:aarohan@uem.edu.in" class="contact-pill">📧 aarohan@uem.edu.in</a>
+                <a href="tel:+91XXXXXXXXXX" class="contact-pill">📞 Contact TBA</a>
+                <a href="https://instagram.com" target="_blank" rel="noopener" class="contact-pill">📸
+                    @aarohan_uemjaipur</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BOTTOM CTA ===== -->
+    <div class="band-cta">
+        <div class="band-cta-divider">Register Now</div>
+        <p>
+            The stage of Aarohan 1.0 awaits. Grab your Gate Pass and secure your spot before registrations close.
+        </p>
+        <div class="band-cta-btns">
+            <button class="btn btn-primary btn-lg" id="eventRegisterBtn" onclick="handleEventRegister()">
+                ✦ Register for ${title}
+            </button>
+            <a href="events.html" class="btn btn-outline">← Back to All Events</a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <span class="footer-logo">AAROHAN 1.0</span>
+        <div class="footer-ornament">✦ ✦ ✦</div>
+        <p style="font-style:italic;font-family:'Playfair Display',serif;">The Beginning of a Legacy · UEM Jaipur</p>
+        <p style="margin-top:1rem;font-size:0.75rem;opacity:0.5;">© 2026 UEM Jaipur. All rights reserved.</p>
+    </footer>
+
+    <!-- ===== BACKGROUND MUSIC ===== -->
+    <audio id="bgMusic" loop preload="auto"
+        src="Raga Darbari Kanada - Gat - Teentaal Darbari Kanada - Vilayat Khan (youtube).mp3"></audio>
+
+    <!-- Floating music widget -->
+    <div id="musicWidget" style="
+    position:fixed;bottom:1.4rem;left:1.4rem;z-index:9000;
+    display:flex;align-items:center;gap:0.55rem;
+    background:rgba(8,0,22,0.82);backdrop-filter:blur(12px);
+    border:1px solid rgba(212,165,32,0.25);
+    padding:0.45rem 0.85rem 0.45rem 0.55rem;
+    border-radius:2rem;
+    box-shadow:0 4px 24px rgba(0,0,0,0.4);
+    transition:opacity .3s;
+    cursor:pointer;
+  " onclick="toggleMuteMusic()" title="Toggle music">
+        <img id="musicIcon"
+            src="gramophone-silhouette-old-school-audio-player-antique-device-listening-music-flat-vector-illustration-retro-gramophone-silhouette-white-background_627510-3067.avif"
+            alt="Music" style="width:28px;height:28px;object-fit:contain;
+        filter:invert(1) sepia(1) saturate(3) hue-rotate(5deg) brightness(1.1);
+        animation:gramSpin 4s linear infinite;
+        flex-shrink:0;border-radius:50%;" />
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.62rem;letter-spacing:0.08em;
+      color:rgba(212,165,32,0.8);white-space:nowrap;max-width:130px;
+      overflow:hidden;text-overflow:ellipsis;">
+            Raga Darbari Kanada
+        </span>
+        <span id="musicBars" style="display:flex;align-items:flex-end;gap:2px;height:14px;">
+            <span
+                style="width:3px;background:#d4a520;border-radius:2px;animation:bar1 .8s ease-in-out infinite;"></span>
+            <span
+                style="width:3px;background:#d4a520;border-radius:2px;animation:bar2 .8s .2s ease-in-out infinite;"></span>
+            <span
+                style="width:3px;background:#d4a520;border-radius:2px;animation:bar3 .8s .4s ease-in-out infinite;"></span>
+        </span>
+    </div>
+    <style>
+        @keyframes gramSpin {
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes bar1 {
+            0%, 100% { height: 4px }
+            50% { height: 14px }
+        }
+        @keyframes bar2 {
+            0%, 100% { height: 10px }
+            50% { height: 4px }
+        }
+        @keyframes bar3 {
+            0%, 100% { height: 6px }
+            50% { height: 12px }
+        }
+    </style>
+    <script>
+        (function () {
+            const KEY_T = 'bgMusicTime';
+            const KEY_M = 'bgMusicMuted';
+            const KEY_P = 'bgMusicPlaying';
+            const audio = document.getElementById('bgMusic');
+            const icon = document.getElementById('musicIcon');
+            const bars = document.getElementById('musicBars');
+
+            audio.volume = 0.20;
+
+            // Restore saved state from previous page
+            const savedTime = parseFloat(sessionStorage.getItem(KEY_T) || '0');
+            const savedMuted = sessionStorage.getItem(KEY_M) === 'true';
+            const wasPlaying = sessionStorage.getItem(KEY_P) !== 'false'; // default: play
+
+            audio.currentTime = savedTime || 0;
+            audio.muted = savedMuted;
+            setIcon(savedMuted);
+
+            // Try to autoplay (resume from where it left off)
+            if (wasPlaying) {
+                audio.play().catch(() => {
+                    // Autoplay blocked — resume on first user gesture
+                    const resume = () => { audio.play(); document.removeEventListener('click', resume); };
+                    document.addEventListener('click', resume);
+                });
+            }
+
+            // Save state before navigating away
+            window.addEventListener('beforeunload', save);
+            document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+
+            // Ensure music resumes when navigating "Back" (BFCache)
+            window.addEventListener('pageshow', (e) => {
+                if (e.persisted && sessionStorage.getItem(KEY_P) !== 'false' && !savedMuted) {
+                    audio.play().catch(() => {});
+                }
+            });
+
+            function save() {
+                sessionStorage.setItem(KEY_T, audio.currentTime);
+                sessionStorage.setItem(KEY_M, audio.muted);
+                sessionStorage.setItem(KEY_P, !audio.paused);
+            }
+
+            window.toggleMuteMusic = function () {
+                audio.muted = !audio.muted;
+                if (audio.paused && !audio.muted) audio.play();
+                setIcon(audio.muted);
+                save();
+            };
+
+            function setIcon(muted) {
+                const img = document.getElementById('musicIcon');
+                if (muted) {
+                    img.style.filter = 'grayscale(1) brightness(0.4)';
+                    img.style.animationPlayState = 'paused';
+                    bars.style.visibility = 'hidden';
+                } else {
+                    img.style.filter = 'invert(1) sepia(1) saturate(3) hue-rotate(5deg) brightness(1.1)';
+                    img.style.animationPlayState = 'running';
+                    bars.style.visibility = 'visible';
+                }
+            }
+        })();
+    </script>
+
+    <!-- ===== FIREBASE + NAV AUTH ===== -->
+    <script type="module">
+        import { auth } from './firebase.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        let currentUser = null;
+        let currentUserPass = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            if (user) {
+                document.getElementById('navLoginBtn').style.display = 'none';
+                document.getElementById('navDashBtn').style.display = 'inline';
+                document.getElementById('navRegBtn').textContent = 'My Pass';
+                document.getElementById('navRegBtn').onclick = () => location.href = 'dashboard.html';
+
+                try {
+                    const db = getFirestore();
+                    const identifier = user.email || user.uid;
+                    const q = query(collection(db, 'participants'), where('email', '==', identifier));
+                    const snap = await getDocs(q);
+                    if (!snap.empty) currentUserPass = snap.docs[0].data();
+                } catch (_) { }
+            }
+        });
+
+        window.handleEventRegister = () => {
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            sessionStorage.setItem('aarohan_open_event', '${title_escaped}');
+            window.location.href = 'events.html';
+        };
+    </script>
+
+    <!-- ===== HAMBURGER NAV ===== -->
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('open');
+                navLinks.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>
+""")
+
+events_data = [
+    {
+        "filename": "solo_singing_details.html",
+        "title": "Solo Singing",
+        "title_escaped": "Solo Singing",
+        "icon": "🎤",
+        "description": "One voice. One story. Let your vocals carve silence into emotion on the grandest stage of UEM Jaipur.",
+        "duration": "3–5 Minutes",
+        "members": "Solo",
+        "about": "The Solo Singing competition at Aarohan 1.0 is a platform for vocalists to shine. Whether your style is classical, pop, rock, or folk, we welcome all genres. Bring your best performance and captivate the audience on the grand stage.",
+        "rules": "<li>Participant must perform solo</li><li>Performance duration: <strong>3–5 minutes</strong> strictly</li><li>All genres are welcome</li><li>Participant must hold a valid <strong>Aarohan Gate Pass</strong></li><li>Vulgar or offensive content is strictly prohibited</li><li>Decision of the judging panel is final and binding</li>",
+        "requirements": "<li>Basic PA system & main stage monitors will be provided</li><li>One high-quality vocal microphone on stand will be provided</li><li>Backing tracks must be submitted in MP3 format <strong>2 days before</strong> the event</li><li>Karaoke tracks must not contain lead vocals</li>",
+        "judging": "<li><strong>Vocal Quality</strong> — pitch, tone, and control</li><li><strong>Stage Presence</strong> — engagement, energy and showmanship</li><li><strong>Song Choice</strong> — suitability to the vocalist's range</li><li><strong>Overall Performance</strong> — emotional connection and delivery</li>"
+    },
+    {
+        "filename": "solo_dance_details.html",
+        "title": "Solo Dance",
+        "title_escaped": "Solo Dance",
+        "icon": "💃",
+        "description": "Classical grace or contemporary fire — let your body be the voice that speaks without words.",
+        "duration": "3–6 Minutes",
+        "members": "Solo",
+        "about": "The Solo Dance competition at Aarohan 1.0 celebrates the art of movement. From classical Indian dance to modern hip-hop, contemporary to folk, express yourself through dance and own the spotlight.",
+        "rules": "<li>Participant must perform solo</li><li>Performance duration: <strong>3–6 minutes</strong> strictly</li><li>All dance forms are welcome</li><li>Participant must hold a valid <strong>Aarohan Gate Pass</strong></li><li>Vulgar or offensive movements/costumes are strictly prohibited</li><li>Props are allowed but must be pre-approved</li>",
+        "requirements": "<li>Stage area will be cleared and suitable for dance performances</li><li>Audio tracks must be submitted in MP3 format <strong>2 days before</strong> the event</li><li>Lighting requests can be discussed but basic wash lights will be default</li>",
+        "judging": "<li><strong>Choreography</strong> — creativity, routine, and flow</li><li><strong>Execution</strong> — technique, timing, and synchronization with music</li><li><strong>Expressions</strong> — facial expressions and emotional delivery</li><li><strong>Costume and Presentation</strong> — visual appeal</li>"
+    },
+    {
+        "filename": "group_dance_details.html",
+        "title": "Group Dance",
+        "title_escaped": "Group Dance",
+        "icon": "🕺",
+        "description": "Synchronised energy, shared rhythm, collective expression — bring your crew and own the floor together.",
+        "duration": "5–10 Minutes",
+        "members": "4–15 Members",
+        "about": "The Group Dance event at Aarohan 1.0 is all about coordination, energy, and teamwork. Gather your crew, sync your steps, and deliver a breathtaking performance that leaves the audience in awe.",
+        "rules": "<li>Team size: <strong>4 to 15 members</strong></li><li>Performance duration: <strong>5–10 minutes</strong> strictly</li><li>All dance styles/themes are welcome</li><li>Each member must hold a valid <strong>Aarohan Gate Pass</strong></li><li>Vulgar or offensive content/costumes are strictly prohibited</li><li>Decision of the judging panel is final and binding</li>",
+        "requirements": "<li>Spacious main stage area provided</li><li>Audio tracks must be submitted in MP3 format <strong>2 days before</strong> the event</li><li>Any heavy or hazardous props (e.g., fire, water) are strictly prohibited</li>",
+        "judging": "<li><strong>Synchronization</strong> — team coordination and timing</li><li><strong>Choreography & Formations</strong> — stage utilization and creativity</li><li><strong>Energy & Expressions</strong> — audience engagement</li><li><strong>Costumes</strong> — thematic relevance and visual appeal</li>"
+    },
+    {
+        "filename": "tshirt_painting_details.html",
+        "title": "T-Shirt Painting",
+        "title_escaped": "T-Shirt Painting",
+        "icon": "🎨",
+        "description": "A canvas that breathes. Paint your story on fabric and wear your art with pride at Aarohan 1.0.",
+        "duration": "60 Minutes",
+        "members": "1–2 Members",
+        "about": "The T-Shirt Painting competition is a chance for visual artists to turn a simple piece of clothing into a masterpiece. Let your imagination run wild and create wearable art that speaks volumes.",
+        "rules": "<li>Team size: <strong>1 to 2 members</strong></li><li>Duration: <strong>60 minutes</strong> strictly</li><li>Theme will be provided on the spot</li><li>Participants must hold a valid <strong>Aarohan Gate Pass</strong></li><li>Use of mobile phones or reference materials during the event is prohibited</li><li>Decision of the judging panel is final</li>",
+        "requirements": "<li>One plain white T-shirt will be provided to each team</li><li>Participants must bring their own fabric colors, brushes, and palettes</li><li>Other basic stationary (pencils, erasers) must be brought by participants</li>",
+        "judging": "<li><strong>Creativity & Originality</strong> — unique approach to the theme</li><li><strong>Relevance to Theme</strong> — how well the artwork represents the given topic</li><li><strong>Neatness & Detailing</strong> — skill and precision</li><li><strong>Overall Visual Impact</strong> — aesthetic appeal</li>"
+    },
+    {
+        "filename": "nukkad_natak_details.html",
+        "title": "Nukkad Natak",
+        "title_escaped": "Nukkad Natak",
+        "icon": "🎭",
+        "description": "Street theatre at its most raw and powerful. No props needed — just passion, truth, and collective voice.",
+        "duration": "10–15 Minutes",
+        "members": "5–20 Members",
+        "about": "The Nukkad Natak (Street Play) competition at Aarohan 1.0 is a celebration of raw theatrical power. Use your voice, expressions, and teamwork to highlight social issues and captivate the crowd in a raw, unplugged setting.",
+        "rules": "<li>Team size: <strong>5 to 20 members</strong></li><li>Performance duration: <strong>10–15 minutes</strong> strictly</li><li>Language: Hindi or English</li><li>Each member must hold a valid <strong>Aarohan Gate Pass</strong></li><li>No electronic sound systems or microphones allowed</li><li>Vulgar language or obscenity will lead to immediate disqualification</li>",
+        "requirements": "<li>Open circular performance area will be provided</li><li>Only basic acoustic instruments (Dholak, Dafli, Flute, etc.) are allowed</li><li>No heavy props; only basic handheld props or uniform attire permitted</li>",
+        "judging": "<li><strong>Script & Theme</strong> — impact of the message and storyline</li><li><strong>Acting & Expressions</strong> — vocal projection, emotions, and delivery</li><li><strong>Crowd Interaction</strong> — ability to hold the audience's attention</li><li><strong>Team Coordination</strong> — synchronization and formations</li>"
+    }
+]
+
+for event in events_data:
+    content = template.substitute(**event)
+    with open(event['filename'], 'w', encoding='utf-8') as f:
+        f.write(content)

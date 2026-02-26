@@ -718,6 +718,13 @@
       window.addEventListener('beforeunload', save);
       document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
 
+      // Ensure music resumes when navigating "Back" (BFCache)
+      window.addEventListener('pageshow', (e) => {
+        if (e.persisted && sessionStorage.getItem(KEY_P) !== 'false' && !savedMuted) {
+          audio.play().catch(() => { });
+        }
+      });
+
       function save() {
         sessionStorage.setItem(KEY_T, audio.currentTime);
         sessionStorage.setItem(KEY_M, audio.muted);
