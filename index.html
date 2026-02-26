@@ -121,9 +121,8 @@
       }
     }
 
-    /* Cinematic wide letterbox lines at very top and bottom of hero */
-    .letterbox-top,
-    .letterbox-bottom {
+    /* Cinematic wide letterbox line at very top of hero */
+    .letterbox-top {
       position: fixed;
       left: 0;
       right: 0;
@@ -131,14 +130,7 @@
       z-index: 999;
       background: var(--grad-gold);
       opacity: 0.7;
-    }
-
-    .letterbox-top {
       top: 0;
-    }
-
-    .letterbox-bottom {
-      bottom: 0;
     }
   </style>
 </head>
@@ -192,7 +184,6 @@
 
   <!-- Cinematic edge lines -->
   <div class="letterbox-top"></div>
-  <div class="letterbox-bottom"></div>
 
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar">
