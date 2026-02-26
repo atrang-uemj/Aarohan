@@ -283,10 +283,13 @@
                 // If it's a brand new user, send them a welcome email!
                 if (addInfo && addInfo.isNewUser) {
                     try {
-                        await fetch('http://localhost:5000/send-welcome', {
+                        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxivngTf1ACsauGrgP6WTaMt94pJxNM3N1Lj08dZm0meRld1JmHpmsW6IgM6cf7yjYU/exec';
+                        await fetch(APPS_SCRIPT_URL, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            mode: 'no-cors', // matching events.html
+                            headers: { 'Content-Type': 'text/plain' },
                             body: JSON.stringify({
+                                email_type: 'welcome',
                                 to_email: result.user.email,
                                 to_name: result.user.displayName || "Participant"
                             })
