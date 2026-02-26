@@ -1144,6 +1144,141 @@
         });
     </script>
 
+
+    <!-- ===== BACKGROUND MUSIC ===== -->
+    <audio id="bgMusic" loop preload="auto"
+        src="Raga Darbari Kanada - Gat - Teentaal Darbari Kanada - Vilayat Khan (youtube).mp3"></audio>
+
+    <!-- Floating music widget -->
+    <div id="musicWidget" style="
+    position:fixed;bottom:1.4rem;left:1.4rem;z-index:9000;
+    display:flex;align-items:center;gap:0.55rem;
+    background:rgba(8,0,22,0.82);backdrop-filter:blur(12px);
+    border:1px solid rgba(212,165,32,0.25);
+    padding:0.45rem 0.85rem 0.45rem 0.55rem;
+    border-radius:2rem;
+    box-shadow:0 4px 24px rgba(0,0,0,0.4);
+    transition:opacity .3s;
+    cursor:pointer;
+  " onclick="toggleMuteMusic()" title="Toggle music">
+        <img id="musicIcon"
+            src="gramophone-silhouette-old-school-audio-player-antique-device-listening-music-flat-vector-illustration-retro-gramophone-silhouette-white-background_627510-3067.avif"
+            alt="Music" style="width:28px;height:28px;object-fit:contain;
+        filter:invert(1) sepia(1) saturate(3) hue-rotate(5deg) brightness(1.1);
+        animation:gramSpin 4s linear infinite;
+        flex-shrink:0;border-radius:50%;" />
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.62rem;letter-spacing:0.08em;
+      color:rgba(212,165,32,0.8);white-space:nowrap;max-width:130px;
+      overflow:hidden;text-overflow:ellipsis;">
+            Raga Darbari Kanada
+        </span>
+        <span id="musicBars" style="display:flex;align-items:flex-end;gap:2px;height:14px;">
+            <span
+                style="width:3px;background:#d4a520;border-radius:2px;animation:bar1 .8s ease-in-out infinite;"></span>
+            <span
+                style="width:3px;background:#d4a520;border-radius:2px;animation:bar2 .8s .2s ease-in-out infinite;"></span>
+            <span
+                style="width:3px;background:#d4a520;border-radius:2px;animation:bar3 .8s .4s ease-in-out infinite;"></span>
+        </span>
+    </div>
+    <style>
+        @keyframes bar1 {
+
+            0%,
+            100% {
+                height: 4px
+            }
+
+            50% {
+                height: 14px
+            }
+        }
+
+        @keyframes bar2 {
+
+            0%,
+            100% {
+                height: 10px
+            }
+
+            50% {
+                height: 4px
+            }
+        }
+
+        @keyframes bar3 {
+
+            0%,
+            100% {
+                height: 6px
+            }
+
+            50% {
+                height: 12px
+            }
+        }
+    </style>
+    <script>
+        (function () {
+            const KEY_T = 'bgMusicTime';
+            const KEY_M = 'bgMusicMuted';
+            const KEY_P = 'bgMusicPlaying';
+            const audio = document.getElementById('bgMusic');
+            const icon = document.getElementById('musicIcon');
+            const bars = document.getElementById('musicBars');
+
+            audio.volume = 0.30;
+
+            // Restore saved state from previous page
+            const savedTime = parseFloat(sessionStorage.getItem(KEY_T) || '0');
+            const savedMuted = sessionStorage.getItem(KEY_M) === 'true';
+            const wasPlaying = sessionStorage.getItem(KEY_P) !== 'false'; // default: play
+
+            audio.currentTime = savedTime || 0;
+            audio.muted = savedMuted;
+            setIcon(savedMuted);
+
+            // Try to autoplay (resume from where it left off)
+            if (wasPlaying) {
+                audio.play().catch(() => {
+                    // Autoplay blocked — resume on first user gesture
+                    const resume = () => { audio.play(); document.removeEventListener('click', resume); };
+                    document.addEventListener('click', resume);
+                });
+            }
+
+            // Save state before navigating away
+            window.addEventListener('beforeunload', save);
+            document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+
+            function save() {
+                sessionStorage.setItem(KEY_T, audio.currentTime);
+                sessionStorage.setItem(KEY_M, audio.muted);
+                sessionStorage.setItem(KEY_P, !audio.paused);
+            }
+
+            window.toggleMuteMusic = function () {
+                audio.muted = !audio.muted;
+                if (audio.paused && !audio.muted) audio.play();
+                setIcon(audio.muted);
+                save();
+            };
+
+            function setIcon(muted) {
+                const img = document.getElementById('musicIcon');
+                if (muted) {
+                    img.style.filter = 'grayscale(1) brightness(0.4)';
+                    img.style.animationPlayState = 'paused';
+                    bars.style.visibility = 'hidden';
+                } else {
+                    img.style.filter = 'invert(1) sepia(1) saturate(3) hue-rotate(5deg) brightness(1.1)';
+                    img.style.animationPlayState = 'running';
+                    bars.style.visibility = 'visible';
+                }
+            }
+        })();
+    </script>
+
 </body>
 
 </html>
