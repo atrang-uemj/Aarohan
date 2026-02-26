@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- html2canvas for download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF for PDF export (optional) -->
 
     <style>
         .gate-pass {
@@ -21,6 +22,105 @@
         #downloadBtn {
             margin-top: 1rem;
             width: 100%;
+        }
+
+        /* ===== PHOTO UPLOAD ===== */
+        .photo-upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .photo-preview-ring {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 165, 32, 0.45);
+            background: rgba(212, 165, 32, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .photo-preview-ring:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 18px rgba(212, 165, 32, 0.25);
+        }
+
+        .photo-preview-ring img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-ring .photo-placeholder-icon {
+            font-size: 2rem;
+            opacity: 0.45;
+        }
+
+        .photo-upload-hint {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .photo-upload-btn {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--gold);
+            background: rgba(212, 165, 32, 0.08);
+            border: 1px solid rgba(212, 165, 32, 0.25);
+            padding: 0.3rem 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .photo-upload-btn:hover {
+            background: rgba(212, 165, 32, 0.15);
+        }
+
+        /* Photo on gate pass */
+        .pass-photo-slot {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 165, 32, 0.5);
+            overflow: hidden;
+            background: rgba(212, 165, 32, 0.07);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .pass-photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pass-photo-slot .pass-photo-empty {
+            font-size: 1.8rem;
+            opacity: 0.3;
+        }
+
+        .pass-photo-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.15rem;
+            flex-shrink: 0;
         }
 
         /* College logo on gate pass */
@@ -361,6 +461,29 @@
                         </div>
                     </div>
 
+                    <!-- Photo upload -->
+                    <div class="form-group">
+                        <label class="form-label">Your Photo <span
+                                style="color:var(--text-muted);font-weight:400;font-size:0.75rem;">(appears on your
+                                pass)</span></label>
+                        <div class="photo-upload-area">
+                            <div class="photo-preview-ring" id="photoRing"
+                                onclick="document.getElementById('photoFileInput').click()"
+                                title="Click to upload photo">
+                                <span class="photo-placeholder-icon" id="photoPlaceholderIcon">📷</span>
+                                <img id="photoPreviewImg" src="" alt="Your photo" style="display:none;" />
+                            </div>
+                            <div>
+                                <button type="button" class="photo-upload-btn"
+                                    onclick="document.getElementById('photoFileInput').click()">Upload Photo</button>
+                                <p class="photo-upload-hint" style="margin-top:0.4rem;">JPG / PNG · max 2 MB<br />Will
+                                    appear on your gate pass</p>
+                            </div>
+                        </div>
+                        <input type="file" id="photoFileInput" accept="image/jpeg,image/png,image/webp"
+                            style="display:none;" onchange="handlePhotoSelect(event)" />
+                    </div>
+
                     <button class="btn btn-primary btn-full" id="registerBtn" onclick="handleRegister()">
                         ✦ Get My Gate Pass
                     </button>
@@ -418,27 +541,38 @@
                         <div class="pass-info">
                             <div class="pass-info-row">
 
-                                <!-- Left: info -->
-                                <div style="flex:1;">
+                                <!-- Left: photo + info -->
+                                <div style="flex:1;display:flex;gap:1rem;align-items:flex-start;">
 
-                                    <div class="pass-field">
-                                        <div class="pass-field-label">Participant Name</div>
-                                        <div class="pass-field-value" id="passName">—</div>
-                                    </div>
-
-                                    <!-- College with logo -->
-                                    <div class="pass-field">
-                                        <div class="pass-field-label">College</div>
-                                        <div class="pass-college-row">
-                                            <img class="pass-college-logo" id="passCollegeLogo" src="" alt=""
-                                                loading="lazy" onerror="this.style.display='none'" />
-                                            <span class="pass-field-value" id="passCollege">—</span>
+                                    <!-- Photo column -->
+                                    <div class="pass-photo-col">
+                                        <div class="pass-photo-slot" id="passPhotoSlot">
+                                            <span class="pass-photo-empty" id="passPhotoEmpty">👤</span>
+                                            <img id="passPhotoImg" src="" alt="Participant" style="display:none;" />
                                         </div>
                                     </div>
 
-                                    <div class="pass-field">
-                                        <div class="pass-field-label">Gate Pass ID</div>
-                                        <div class="pass-id" id="passID">—</div>
+                                    <!-- Info column -->
+                                    <div style="flex:1;">
+                                        <div class="pass-field">
+                                            <div class="pass-field-label">Participant Name</div>
+                                            <div class="pass-field-value" id="passName">—</div>
+                                        </div>
+
+                                        <!-- College with logo -->
+                                        <div class="pass-field">
+                                            <div class="pass-field-label">College</div>
+                                            <div class="pass-college-row">
+                                                <img class="pass-college-logo" id="passCollegeLogo" src="" alt=""
+                                                    loading="lazy" onerror="this.style.display='none'" />
+                                                <span class="pass-field-value" id="passCollege">—</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="pass-field">
+                                            <div class="pass-field-label">Gate Pass ID</div>
+                                            <div class="pass-id" id="passID">—</div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -568,7 +702,7 @@
                 const snap = await getDocs(q);
                 if (!snap.empty) {
                     const d = snap.docs[0].data();
-                    renderGatePass(d.name, d.college, d.gatePassID);
+                    renderGatePass(d.name, d.college, d.gatePassID, d.photo || null);
                     showRegisteredState(d.gatePassID);
                 }
             } catch (err) {
@@ -655,6 +789,37 @@
             }
         }
 
+        /* ---- Photo upload ---- */
+        let selectedPhotoBase64 = null;
+
+        window.handlePhotoSelect = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 2 * 1024 * 1024) { showRegError('Photo must be under 2 MB.'); return; }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                // Resize to max 400×400 for storage efficiency
+                const img = new Image();
+                img.onload = () => {
+                    const MAX = 400;
+                    let w = img.width, h = img.height;
+                    if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+                    else { w = Math.round(w * MAX / h); h = MAX; }
+                    const c = document.createElement('canvas');
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    selectedPhotoBase64 = c.toDataURL('image/jpeg', 0.85);
+                    // Show preview
+                    document.getElementById('photoPlaceholderIcon').style.display = 'none';
+                    const previewImg = document.getElementById('photoPreviewImg');
+                    previewImg.src = selectedPhotoBase64;
+                    previewImg.style.display = 'block';
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
         /* ---- Register ---- */
         window.handleRegister = async () => {
             const name = document.getElementById('regName').value.trim();
@@ -679,7 +844,7 @@
 
                 if (!snap.empty) {
                     const d = snap.docs[0].data();
-                    renderGatePass(d.name, d.college, d.gatePassID);
+                    renderGatePass(d.name, d.college, d.gatePassID, d.photo || null);
                     showRegisteredState(d.gatePassID);
                     btn.disabled = false;
                     btn.innerHTML = '✦ Get My Gate Pass';
@@ -689,16 +854,19 @@
                 /* Generate Gate Pass ID */
                 const gatePassID = 'AARO-' + Math.floor(10000 + Math.random() * 90000);
 
-                /* Save to Firestore */
-                await addDoc(collection(db, 'participants'), {
+                /* Save to Firestore (include photo if provided) */
+                const docData = {
                     name: name,
                     college: college,
                     email: identifier,
                     gatePassID: gatePassID,
                     timestamp: serverTimestamp()
-                });
+                };
+                if (selectedPhotoBase64) docData.photo = selectedPhotoBase64;
 
-                renderGatePass(name, college, gatePassID);
+                await addDoc(collection(db, 'participants'), docData);
+
+                renderGatePass(name, college, gatePassID, selectedPhotoBase64);
                 showRegisteredState(gatePassID);
 
                 document.getElementById('successMsg').textContent =
@@ -714,7 +882,7 @@
         };
 
         /* ---- Render gate pass ---- */
-        function renderGatePass(name, college, gatePassID) {
+        function renderGatePass(name, college, gatePassID, photoBase64) {
             document.getElementById('passName').textContent = name;
             document.getElementById('passCollege').textContent = college;
             document.getElementById('passID').textContent = gatePassID;
@@ -729,6 +897,18 @@
                 logoImg.style.display = 'inline-block';
             } else {
                 logoImg.style.display = 'none';
+            }
+
+            /* Participant photo */
+            const passPhotoImg = document.getElementById('passPhotoImg');
+            const passPhotoEmpty = document.getElementById('passPhotoEmpty');
+            if (photoBase64) {
+                passPhotoImg.src = photoBase64;
+                passPhotoImg.style.display = 'block';
+                passPhotoEmpty.style.display = 'none';
+            } else {
+                passPhotoImg.style.display = 'none';
+                passPhotoEmpty.style.display = 'block';
             }
 
             /* QR Code — Gate Pass ID only */
@@ -758,26 +938,255 @@
             el.classList.add('show');
         }
 
-        /* ---- Download gate pass ---- */
+        /* ---- Download gate pass (high-quality canvas renderer) ---- */
         window.downloadPass = async () => {
             const btn = document.getElementById('downloadBtn');
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Preparing...';
             try {
                 const passID = document.getElementById('passID').textContent;
-                const canvas = await html2canvas(document.getElementById('gatePassCard'), {
-                    backgroundColor: '#0b0018',
-                    scale: 2.5,
-                    useCORS: true,
-                    logging: false
+                const passName = document.getElementById('passName').textContent;
+                const passCollege = document.getElementById('passCollege').textContent;
+                const photoSrc = document.getElementById('passPhotoImg').src || null;
+                const hasPhoto = document.getElementById('passPhotoImg').style.display !== 'none' && photoSrc;
+
+                // Get QR as image
+                const qrImg = document.querySelector('#qrcode img') || document.querySelector('#qrcode canvas');
+
+                const S = 3; // scale factor for high DPI
+                const W = 520, H = 300; // logical dimensions
+                const CW = W * S, CH = H * S;
+
+                const canvas = document.createElement('canvas');
+                canvas.width = CW; canvas.height = CH;
+                const ctx = canvas.getContext('2d');
+                ctx.scale(S, S);
+
+                // ── Background gradient ──
+                const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+                bgGrad.addColorStop(0, '#0d0020');
+                bgGrad.addColorStop(0.5, '#110030');
+                bgGrad.addColorStop(1, '#0d0025');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, W, H);
+
+                // Subtle grid pattern
+                ctx.strokeStyle = 'rgba(212,165,32,0.04)';
+                ctx.lineWidth = 0.5;
+                for (let x = 0; x < W; x += 18) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+                for (let y = 0; y < H; y += 18) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+                // Gold border
+                const borderGrad = ctx.createLinearGradient(0, 0, W, H);
+                borderGrad.addColorStop(0, 'rgba(212,165,32,0.8)');
+                borderGrad.addColorStop(0.5, 'rgba(255,215,80,1)');
+                borderGrad.addColorStop(1, 'rgba(212,165,32,0.8)');
+                ctx.strokeStyle = borderGrad;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(1, 1, W - 2, H - 2);
+
+                // Inner border
+                ctx.strokeStyle = 'rgba(212,165,32,0.15)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(8, 8, W - 16, H - 16);
+
+                // Corner accents
+                const cornerLen = 16;
+                ctx.strokeStyle = 'rgba(212,165,32,0.7)';
+                ctx.lineWidth = 1.5;
+                [[12, 12], [W - 12, 12], [12, H - 12], [W - 12, H - 12]].forEach(([cx, cy], i) => {
+                    const dx = i % 2 === 0 ? 1 : -1, dy = i < 2 ? 1 : -1;
+                    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + dx * cornerLen, cy); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy + dy * cornerLen); ctx.stroke();
                 });
-                const link = document.createElement('a');
-                link.download = `Aarohan1-GatePass-${passID}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
+
+                // ── Header ──
+                ctx.textAlign = 'left';
+                ctx.font = 'bold 22px serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText('AAROHAN', 22, 40);
+
+                ctx.font = '8px sans-serif';
+                ctx.fillStyle = 'rgba(212,165,32,0.7)';
+                ctx.letterSpacing = '3px';
+                ctx.fillText('1.0  ·  U E M  J A I P U R', 22, 55);
+
+                // Founding badge
+                ctx.font = 'bold 8px sans-serif';
+                const badgeTxt = '⭐ Founding Edition';
+                const btw = ctx.measureText(badgeTxt).width + 12;
+                const btx = W - btw - 20;
+                ctx.fillStyle = 'rgba(212,165,32,0.12)';
+                ctx.strokeStyle = 'rgba(212,165,32,0.35)';
+                ctx.lineWidth = 0.8;
+                ctx.beginPath(); ctx.roundRect(btx, 28, btw, 18, 3); ctx.fill(); ctx.stroke();
+                ctx.fillStyle = 'rgba(212,165,32,0.9)';
+                ctx.textAlign = 'center';
+                ctx.fillText(badgeTxt, btx + btw / 2, 40);
+
+                // ── Divider ──
+                const divGrad = ctx.createLinearGradient(22, 0, W - 22, 0);
+                divGrad.addColorStop(0, 'rgba(212,165,32,0)');
+                divGrad.addColorStop(0.3, 'rgba(212,165,32,0.5)');
+                divGrad.addColorStop(0.7, 'rgba(212,165,32,0.5)');
+                divGrad.addColorStop(1, 'rgba(212,165,32,0)');
+                ctx.strokeStyle = divGrad;
+                ctx.lineWidth = 0.8;
+                ctx.beginPath(); ctx.moveTo(22, 68); ctx.lineTo(W - 22, 68); ctx.stroke();
+
+                // ── Body layout ──
+                const bodyY = 82;
+                let infoX = 22;
+
+                // Photo circle (if available)
+                const photoSize = 72;
+                const photoX = infoX;
+                const photoY = bodyY;
+
+                const drawInfoFields = (startX) => {
+                    ctx.textAlign = 'left';
+                    let y = bodyY;
+
+                    // Name field
+                    ctx.font = '7px sans-serif';
+                    ctx.fillStyle = 'rgba(212,165,32,0.5)';
+                    ctx.fillText('PARTICIPANT NAME', startX, y);
+                    ctx.font = 'bold 13px sans-serif';
+                    ctx.fillStyle = '#f5f5f5';
+                    ctx.fillText(passName, startX, y + 16);
+
+                    // College field
+                    y += 36;
+                    ctx.font = '7px sans-serif';
+                    ctx.fillStyle = 'rgba(212,165,32,0.5)';
+                    ctx.fillText('COLLEGE', startX, y);
+                    ctx.font = '11px sans-serif';
+                    ctx.fillStyle = '#ddd';
+                    // Word wrap college name if long
+                    const maxW = 220;
+                    let collegeLine = passCollege;
+                    if (ctx.measureText(collegeLine).width > maxW) {
+                        const words = collegeLine.split(' ');
+                        let line = ''; let lines = [];
+                        words.forEach(w => {
+                            const test = line + (line ? ' ' : '') + w;
+                            if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+                            else line = test;
+                        });
+                        lines.push(line);
+                        lines.forEach((l, i) => ctx.fillText(l, startX, y + 14 + (i * 13)));
+                    } else {
+                        ctx.fillText(collegeLine, startX, y + 14);
+                    }
+
+                    // Pass ID field
+                    y += 40;
+                    ctx.font = '7px sans-serif';
+                    ctx.fillStyle = 'rgba(212,165,32,0.5)';
+                    ctx.fillText('GATE PASS ID', startX, y);
+                    ctx.font = 'bold 15px monospace';
+                    const pidGrad = ctx.createLinearGradient(startX, 0, startX + 120, 0);
+                    pidGrad.addColorStop(0, '#d4a520');
+                    pidGrad.addColorStop(1, '#ffd700');
+                    ctx.fillStyle = pidGrad;
+                    ctx.fillText(passID, startX, y + 17);
+                };
+
+                // Draw photo if available
+                const drawPassWithOptionalPhoto = async () => {
+                    let infoStartX = infoX;
+
+                    if (hasPhoto) {
+                        await new Promise(resolve => {
+                            const img = new Image();
+                            img.onload = () => {
+                                // clip circle
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.arc(photoX + photoSize / 2, photoY + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
+                                ctx.clip();
+                                ctx.drawImage(img, photoX, photoY, photoSize, photoSize);
+                                ctx.restore();
+                                // circle border
+                                ctx.beginPath();
+                                ctx.arc(photoX + photoSize / 2, photoY + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
+                                ctx.strokeStyle = 'rgba(212,165,32,0.6)';
+                                ctx.lineWidth = 2;
+                                ctx.stroke();
+                                resolve();
+                            };
+                            img.onerror = resolve;
+                            img.crossOrigin = 'anonymous';
+                            img.src = photoSrc;
+                        });
+                        infoStartX = photoX + photoSize + 16;
+                    }
+
+                    drawInfoFields(infoStartX);
+
+                    // ── QR Code ──
+                    const qrSize = 90;
+                    const qrX = W - qrSize - 22;
+                    const qrY = bodyY - 4;
+
+                    if (qrImg) {
+                        await new Promise(resolve => {
+                            const qi = new Image();
+                            qi.onload = () => {
+                                // White bg
+                                ctx.fillStyle = '#fff';
+                                ctx.fillRect(qrX - 4, qrY - 4, qrSize + 8, qrSize + 8);
+                                ctx.drawImage(qi, qrX, qrY, qrSize, qrSize);
+                                ctx.font = '7px sans-serif';
+                                ctx.fillStyle = 'rgba(212,165,32,0.6)';
+                                ctx.textAlign = 'center';
+                                ctx.fillText('Scan to Verify', qrX + qrSize / 2, qrY + qrSize + 12);
+                                resolve();
+                            };
+                            qi.onerror = resolve;
+                            qi.crossOrigin = 'anonymous';
+                            qi.src = qrImg.src || qrImg.toDataURL();
+                        });
+                    }
+
+                    // ── Divider ──
+                    ctx.strokeStyle = divGrad;
+                    ctx.lineWidth = 0.8;
+                    ctx.beginPath(); ctx.moveTo(22, H - 40); ctx.lineTo(W - 22, H - 40); ctx.stroke();
+
+                    // ── Footer ──
+                    ctx.textAlign = 'center';
+                    ctx.font = 'italic 8px serif';
+                    ctx.fillStyle = 'rgba(212,165,32,0.5)';
+                    ctx.fillText('Aarohan 1.0 · The Beginning of a Legacy', W / 2, H - 26);
+                    ctx.font = '7.5px sans-serif';
+                    ctx.fillStyle = 'rgba(200,200,200,0.45)';
+                    ctx.fillText('University of Engineering & Management, Jaipur  ·  Valid for Single Entry', W / 2, H - 14);
+
+                    // Download
+                    const link = document.createElement('a');
+                    link.download = `Aarohan1-GatePass-${passID}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                };
+
+                await drawPassWithOptionalPhoto();
+
             } catch (e) {
-                alert('Download failed. Please take a screenshot instead.');
-                console.error(e);
+                // Fallback to html2canvas
+                try {
+                    const passID = document.getElementById('passID').textContent;
+                    const c = await html2canvas(document.getElementById('gatePassCard'), {
+                        backgroundColor: '#0d0020', scale: 3, useCORS: true, logging: false
+                    });
+                    const link = document.createElement('a');
+                    link.download = `Aarohan1-GatePass-${passID}.png`;
+                    link.href = c.toDataURL('image/png', 1.0);
+                    link.click();
+                } catch (e2) {
+                    alert('Download failed. Please take a screenshot instead.');
+                    console.error(e2);
+                }
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '⬇ Download Gate Pass';

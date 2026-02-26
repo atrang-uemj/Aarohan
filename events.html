@@ -621,8 +621,7 @@
         <p style="margin-top:1rem;font-size:0.75rem;opacity:0.5;">© 2026 UEM Jaipur. All rights reserved.</p>
     </footer>
 
-    <!-- EmailJS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 
     <!-- ===== FIREBASE + LOGIC ===== -->
     <script type="module">
@@ -633,35 +632,38 @@
         } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         // ================================================================
-        //  EMAILJS CONFIG  ← fill these in from emailjs.com dashboard
+        //  EMAIL — Python SMTP Server
+        //  The frontend POSTs registration data to the local Python server
+        //  (email_server.py) which sends the email via Gmail SMTP.
+        //
+        //  SETUP: run `python email_server.py` in a terminal before using
+        //  the registration page. Server listens at http://localhost:5000
         // ================================================================
-        const EJS_PUBLIC_KEY = 'tGvAEHBuhmkrIulmM';   // Account → API Keys
-        const EJS_SERVICE_ID = 'service_sldlt1l';           // Email Services tab
-        const EJS_TEMPLATE_ID = 'template_iosnd4l';          // Email Templates tab
-
-        // Init once
-        if (window.emailjs) emailjs.init({ publicKey: EJS_PUBLIC_KEY });
+        const SMTP_SERVER_URL = 'http://localhost:5000/send-email';
 
         /**
          * sendConfirmationEmail
-         * Sends event-registration confirmation to every member's stored email.
-         * Fails silently so it never blocks the UI.
+         * POSTs to the local Python SMTP server.
+         * Fails silently — never blocks the registration UI.
          */
         async function sendConfirmationEmail({ toEmail, toName, eventName, gatePassID, teamName, memberList }) {
-            if (!window.emailjs || EJS_PUBLIC_KEY === 'YOUR_EMAILJS_PUBLIC_KEY') return;
+            if (!toEmail) return;
             try {
-                await emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, {
-                    to_email: toEmail,
-                    to_name: toName,
-                    event_name: eventName,
-                    gate_pass_id: gatePassID,
-                    team_name: teamName || '—',
-                    member_list: memberList || toName,
-                    fest_name: 'Aarohan 1.0',
-                    fest_venue: 'UEM Jaipur',
+                await fetch(SMTP_SERVER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to_email: toEmail,
+                        to_name: toName,
+                        event_name: eventName,
+                        gate_pass_id: gatePassID,
+                        team_name: teamName || null,
+                        member_list: memberList || null,
+                    })
                 });
             } catch (e) {
-                console.warn('[EmailJS] Failed to send email:', e.message);
+                // Server not running or network error — silently skip
+                console.warn('[Email] Could not reach SMTP server:', e.message);
             }
         }
 
