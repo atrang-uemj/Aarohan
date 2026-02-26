@@ -1587,6 +1587,179 @@ section {
 }
 
 /* ============================================================
+   CUSTOM COLLEGE DROPDOWN
+   ============================================================ */
+.custom-select-wrapper {
+    position: relative;
+    user-select: none;
+    width: 100%;
+}
+
+.custom-select {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-select__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.95rem;
+    background: rgba(3, 3, 5, 0.6);
+    color: var(--text-primary);
+    border: 1px solid rgba(212, 165, 32, 0.25);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.custom-select__trigger:hover {
+    border-color: rgba(212, 165, 32, 0.5);
+    background: rgba(212, 165, 32, 0.05);
+}
+
+.custom-select__trigger .trigger-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.custom-select__trigger img {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    object-fit: contain;
+    background: #fff;
+    padding: 2px;
+}
+
+.custom-options {
+    position: absolute;
+    display: block;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid rgba(212, 165, 32, 0.25);
+    border-top: 0;
+    background: #07070f;
+    transition: all 0.2s ease;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 99;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.custom-select.open .custom-options {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+.custom-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-option:hover {
+    cursor: pointer;
+    background-color: rgba(212, 165, 32, 0.1);
+}
+
+.custom-option.selected {
+    color: #fff;
+    background-color: rgba(212, 165, 32, 0.2);
+}
+
+.custom-option img {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    object-fit: contain;
+    background: #fff;
+    padding: 2px;
+}
+
+.custom-optgroup {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    background: rgba(212, 165, 32, 0.05);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    pointer-events: none;
+}
+
+.arrow {
+    position: relative;
+    height: 10px;
+    width: 10px;
+}
+
+.arrow::before,
+.arrow::after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    width: 0.15rem;
+    height: 100%;
+    transition: all 0.2s;
+}
+
+.arrow::before {
+    left: -3px;
+    transform: rotate(45deg);
+    background-color: var(--text-muted);
+}
+
+.arrow::after {
+    left: 3px;
+    transform: rotate(-45deg);
+    background-color: var(--text-muted);
+}
+
+.open .arrow::before {
+    left: -3px;
+    transform: rotate(-45deg);
+}
+
+.open .arrow::after {
+    left: 3px;
+    transform: rotate(45deg);
+}
+
+/* Scrollbar for custom dropdown */
+.custom-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-options::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.custom-options::-webkit-scrollbar-thumb {
+    background: rgba(212, 165, 32, 0.3);
+    border-radius: 3px;
+}
+
+.custom-options::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 165, 32, 0.6);
+}
+
+/* ============================================================
    PAGE HERO (inner pages)
    ============================================================ */
 .page-hero {

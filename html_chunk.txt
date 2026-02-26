@@ -1,0 +1,209 @@
+                                    <div class="custom-option" data-value="ARCH Academy of Design" data-domain="archedu.org">
+                                        <img src="college/archedu.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>ARCH Academy of Design</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Amity University, Jaipur" data-domain="jaipur.amity.edu">
+                                        <img src="college/jaipur.amity.edu.png" alt="" onerror="this.style.display='none'">
+                                        <span>Amity University, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Apex University" data-domain="apex.edu.in">
+                                        <img src="college/apex.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Apex University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Arya Group Of Colleges" data-domain="aryacollege.in">
+                                        <img src="college/aryacollege.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Arya Group Of Colleges</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Baldev Ram Mirdha Institute of Technology" data-domain="brmit.in">
+                                        <img src="college/brmit.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Baldev Ram Mirdha Institute of Technology</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Biyani Group of Colleges" data-domain="biyanicolleges.org">
+                                        <img src="college/biyanicolleges.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>Biyani Group of Colleges</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Commerce College, Jaipur" data-domain="uniraj.ac.in">
+                                        <img src="college/uniraj.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Commerce College, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Compucom Institute of Information Technology and Management" data-domain="compucom.co.in">
+                                        <img src="college/compucom.co.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Compucom Institute of Information Technology and Management</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Dr. Bhimrao Ambedkar Law University" data-domain="alujaipur.ac.in">
+                                        <img src="college/alujaipur.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Dr. Bhimrao Ambedkar Law University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Global Institute of Technology" data-domain="git.ac.in">
+                                        <img src="college/git.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Global Institute of Technology</span>
+                                    </div>
+                                    <div class="custom-option" data-value="HCM Rajasthan State Institute of Public Administration" data-domain="hcmripa.gov.in">
+                                        <img src="college/hcmripa.gov.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>HCM Rajasthan State Institute of Public Administration</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Haridev Joshi University of Journalism and Mass Communication" data-domain="hju.ac.in">
+                                        <img src="college/hju.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Haridev Joshi University of Journalism and Mass Communication</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Homoeopathy University" data-domain="homoeopathyuniversityinfo.org">
+                                        <img src="college/homoeopathyuniversityinfo.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>Homoeopathy University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="ICFAI University, Jaipur" data-domain="iujaipur.edu.in">
+                                        <img src="college/iujaipur.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>ICFAI University, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="IHM Jaipur" data-domain="ihmjaipur.com">
+                                        <img src="college/ihmjaipur.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>IHM Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="IIS University" data-domain="iisuniv.ac.in">
+                                        <img src="college/iisuniv.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>IIS University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="IPS Business School" data-domain="ipsedu.in">
+                                        <img src="college/ipsedu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>IPS Business School</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Indian Institute of Crafts and Design" data-domain="iicd.ac.in">
+                                        <img src="college/iicd.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Indian Institute of Crafts and Design</span>
+                                    </div>
+                                    <div class="custom-option" data-value="JECRC University" data-domain="jecrcuniversity.edu.in">
+                                        <img src="college/jecrcuniversity.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>JECRC University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="JK Lakshmipat University" data-domain="jklu.edu.in">
+                                        <img src="college/jklu.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>JK Lakshmipat University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Jagadguru Ramanandacharya Rajasthan Sanskrit University" data-domain="jrrsanskrituniversity.ac.in">
+                                        <img src="college/jrrsanskrituniversity.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Jagadguru Ramanandacharya Rajasthan Sanskrit University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Jaipur Engineering College" data-domain="jecjaipuroncampus.in">
+                                        <img src="college/jecjaipuroncampus.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Jaipur Engineering College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Jaipur National University" data-domain="jnujaipur.ac.in">
+                                        <img src="college/jnujaipur.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Jaipur National University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="LNMIIT Jaipur" data-domain="lnmiit.ac.in">
+                                        <img src="college/lnmiit.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>LNMIIT Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Lal Bahadur Shastri College, Jaipur" data-domain="lbscollege.com">
+                                        <img src="college/lbscollege.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Lal Bahadur Shastri College, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="MNIT Jaipur" data-domain="mnit.ac.in">
+                                        <img src="college/mnit.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>MNIT Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Maharaja College, Jaipur" data-domain="universitymaharajacollege.ac.in">
+                                        <img src="college/universitymaharajacollege.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Maharaja College, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Manipal University Jaipur" data-domain="jaipur.manipal.edu">
+                                        <img src="college/jaipur.manipal.edu.png" alt="" onerror="this.style.display='none'">
+                                        <span>Manipal University Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="NIMS University" data-domain="nimsuniversity.org">
+                                        <img src="college/nimsuniversity.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>NIMS University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="National Institute of Agricultural Marketing" data-domain="ccsniam.gov.in">
+                                        <img src="college/ccsniam.gov.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>National Institute of Agricultural Marketing</span>
+                                    </div>
+                                    <div class="custom-option" data-value="National Institute of Ayurveda" data-domain="nia.nic.in">
+                                        <img src="college/nia.nic.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>National Institute of Ayurveda</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Pareek College" data-domain="pareekcollege.com">
+                                        <img src="college/pareekcollege.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Pareek College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Picasso Animation College" data-domain="picasso.co.in">
+                                        <img src="college/picasso.co.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Picasso Animation College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Poornima College of Engineering" data-domain="poornima.org">
+                                        <img src="college/poornima.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>Poornima College of Engineering</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Poornima University" data-domain="poornima.edu.in">
+                                        <img src="college/poornima.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Poornima University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Pratap University" data-domain="pratap.edu.in">
+                                        <img src="college/pratap.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Pratap University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="R. A. Podar Institute of Management" data-domain="rapim.ac.in">
+                                        <img src="college/rapim.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>R. A. Podar Institute of Management</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Rajasthan College" data-domain="universityrajasthancollege.ac.in">
+                                        <img src="college/universityrajasthancollege.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Rajasthan College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Rajasthan College of Engineering" data-domain="rce.ac.in">
+                                        <img src="college/rce.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Rajasthan College of Engineering</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Rajasthan Pharmacy College" data-domain="rpcjaipur.com">
+                                        <img src="college/rpcjaipur.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Rajasthan Pharmacy College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Rawat PG Girls College" data-domain="rawatpgcollege.com">
+                                        <img src="college/rawatpgcollege.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Rawat PG Girls College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="SKIT Jaipur" data-domain="skit.ac.in">
+                                        <img src="college/skit.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>SKIT Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="St. Xavier's College Jaipur" data-domain="stxaviersjaipur.org">
+                                        <img src="college/stxaviersjaipur.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>St. Xavier's College Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Subodh College" data-domain="subodhpgcollege.com">
+                                        <img src="college/subodhpgcollege.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Subodh College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Suresh Gyan Vihar University" data-domain="gyanvihar.org">
+                                        <img src="college/gyanvihar.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>Suresh Gyan Vihar University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Tagore Engineering College" data-domain="tagoreengineering.ac.in">
+                                        <img src="college/tagoreengineering.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Tagore Engineering College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="University of Engineering & Management, Jaipur" data-domain="uem.edu.in">
+                                        <img src="college/uem.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>University of Engineering & Management, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="University of Rajasthan" data-domain="uniraj.ac.in">
+                                        <img src="college/uniraj.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>University of Rajasthan</span>
+                                    </div>
+                                    <div class="custom-option" data-value="University of Technology, Jaipur" data-domain="uot.edu.in">
+                                        <img src="college/uot.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>University of Technology, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Vivekananda Global University" data-domain="vgu.ac.in">
+                                        <img src="college/vgu.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Vivekananda Global University</span>
+                                    </div>
+                                    <div class="custom-optgroup">Other</div>
+                                    <div class="custom-option" data-value="Other Jaipur College" data-domain="">
+                                        <span style="font-size:1.2rem; margin-right:4px;">🏛️</span>
+                                        <span>Other College in Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Out of Jaipur" data-domain="">
+                                        <span style="font-size:1.2rem; margin-right:4px;">🌍</span>
+                                        <span>College Outside Jaipur</span>
+                                    </div>

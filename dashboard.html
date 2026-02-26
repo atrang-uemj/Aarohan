@@ -401,65 +401,239 @@
                     <!-- College dropdown -->
                     <div class="form-group">
                         <label class="form-label" for="regCollege">College / Institution</label>
-                        <div class="college-select-wrapper">
-                            <select class="form-select" id="regCollege" required>
-                                <option value="" disabled selected>— Select your college —</option>
+                        <div class="custom-select-wrapper">
+                            <div class="custom-select" id="customCollegeSelect">
+                                <input type="hidden" id="regCollege" required />
+                                <div class="custom-select__trigger">
+                                    <div class="trigger-content">
+                                        <span id="customSelectLabel">— Select your college —</span>
+                                    </div>
+                                    <div class="arrow"></div>
+                                </div>
+                                <div class="custom-options">
 
-                                <optgroup label="Central Institutions">
-                                    <option value="MNIT Jaipur" data-domain="mnit.ac.in">MNIT Jaipur (Malaviya NIT)
-                                    </option>
-                                </optgroup>
+                                    <div class="custom-option" data-value="ARCH Academy of Design" data-domain="archedu.org">
+                                        <img src="college/archedu.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>ARCH Academy of Design</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Amity University, Jaipur" data-domain="jaipur.amity.edu">
+                                        <img src="college/jaipur.amity.edu.png" alt="" onerror="this.style.display='none'">
+                                        <span>Amity University, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Apex University" data-domain="apex.edu.in">
+                                        <img src="college/apex.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Apex University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Arya Group Of Colleges" data-domain="aryacollege.in">
+                                        <img src="college/aryacollege.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Arya Group Of Colleges</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Baldev Ram Mirdha Institute of Technology" data-domain="brmit.in">
+                                        <img src="college/brmit.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Baldev Ram Mirdha Institute of Technology</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Biyani Group of Colleges" data-domain="biyanicolleges.org">
+                                        <img src="college/biyanicolleges.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>Biyani Group of Colleges</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Commerce College, Jaipur" data-domain="uniraj.ac.in">
+                                        <img src="college/uniraj.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Commerce College, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Compucom Institute of Information Technology and Management" data-domain="compucom.co.in">
+                                        <img src="college/compucom.co.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Compucom Institute of Information Technology and Management</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Dr. Bhimrao Ambedkar Law University" data-domain="alujaipur.ac.in">
+                                        <img src="college/alujaipur.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Dr. Bhimrao Ambedkar Law University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Global Institute of Technology" data-domain="git.ac.in">
+                                        <img src="college/git.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Global Institute of Technology</span>
+                                    </div>
+                                    <div class="custom-option" data-value="HCM Rajasthan State Institute of Public Administration" data-domain="hcmripa.gov.in">
+                                        <img src="college/hcmripa.gov.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>HCM Rajasthan State Institute of Public Administration</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Haridev Joshi University of Journalism and Mass Communication" data-domain="hju.ac.in">
+                                        <img src="college/hju.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Haridev Joshi University of Journalism and Mass Communication</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Homoeopathy University" data-domain="homoeopathyuniversityinfo.org">
+                                        <img src="college/homoeopathyuniversityinfo.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>Homoeopathy University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="ICFAI University, Jaipur" data-domain="iujaipur.edu.in">
+                                        <img src="college/iujaipur.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>ICFAI University, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="IHM Jaipur" data-domain="ihmjaipur.com">
+                                        <img src="college/ihmjaipur.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>IHM Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="IIS University" data-domain="iisuniv.ac.in">
+                                        <img src="college/iisuniv.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>IIS University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="IPS Business School" data-domain="ipsedu.in">
+                                        <img src="college/ipsedu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>IPS Business School</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Indian Institute of Crafts and Design" data-domain="iicd.ac.in">
+                                        <img src="college/iicd.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Indian Institute of Crafts and Design</span>
+                                    </div>
+                                    <div class="custom-option" data-value="JECRC University" data-domain="jecrcuniversity.edu.in">
+                                        <img src="college/jecrcuniversity.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>JECRC University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="JK Lakshmipat University" data-domain="jklu.edu.in">
+                                        <img src="college/jklu.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>JK Lakshmipat University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Jagadguru Ramanandacharya Rajasthan Sanskrit University" data-domain="jrrsanskrituniversity.ac.in">
+                                        <img src="college/jrrsanskrituniversity.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Jagadguru Ramanandacharya Rajasthan Sanskrit University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Jaipur Engineering College" data-domain="jecjaipuroncampus.in">
+                                        <img src="college/jecjaipuroncampus.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Jaipur Engineering College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Jaipur National University" data-domain="jnujaipur.ac.in">
+                                        <img src="college/jnujaipur.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Jaipur National University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="LNMIIT Jaipur" data-domain="lnmiit.ac.in">
+                                        <img src="college/lnmiit.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>LNMIIT Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Lal Bahadur Shastri College, Jaipur" data-domain="lbscollege.com">
+                                        <img src="college/lbscollege.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Lal Bahadur Shastri College, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="MNIT Jaipur" data-domain="mnit.ac.in">
+                                        <img src="college/mnit.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>MNIT Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Maharaja College, Jaipur" data-domain="universitymaharajacollege.ac.in">
+                                        <img src="college/universitymaharajacollege.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Maharaja College, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Manipal University Jaipur" data-domain="jaipur.manipal.edu">
+                                        <img src="college/jaipur.manipal.edu.png" alt="" onerror="this.style.display='none'">
+                                        <span>Manipal University Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="NIMS University" data-domain="nimsuniversity.org">
+                                        <img src="college/nimsuniversity.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>NIMS University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="National Institute of Agricultural Marketing" data-domain="ccsniam.gov.in">
+                                        <img src="college/ccsniam.gov.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>National Institute of Agricultural Marketing</span>
+                                    </div>
+                                    <div class="custom-option" data-value="National Institute of Ayurveda" data-domain="nia.nic.in">
+                                        <img src="college/nia.nic.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>National Institute of Ayurveda</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Pareek College" data-domain="pareekcollege.com">
+                                        <img src="college/pareekcollege.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Pareek College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Picasso Animation College" data-domain="picasso.co.in">
+                                        <img src="college/picasso.co.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Picasso Animation College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Poornima College of Engineering" data-domain="poornima.org">
+                                        <img src="college/poornima.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>Poornima College of Engineering</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Poornima University" data-domain="poornima.edu.in">
+                                        <img src="college/poornima.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Poornima University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Pratap University" data-domain="pratap.edu.in">
+                                        <img src="college/pratap.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Pratap University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="R. A. Podar Institute of Management" data-domain="rapim.ac.in">
+                                        <img src="college/rapim.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>R. A. Podar Institute of Management</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Rajasthan College" data-domain="universityrajasthancollege.ac.in">
+                                        <img src="college/universityrajasthancollege.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Rajasthan College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Rajasthan College of Engineering" data-domain="rce.ac.in">
+                                        <img src="college/rce.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Rajasthan College of Engineering</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Rajasthan Pharmacy College" data-domain="rpcjaipur.com">
+                                        <img src="college/rpcjaipur.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Rajasthan Pharmacy College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Rawat PG Girls College" data-domain="rawatpgcollege.com">
+                                        <img src="college/rawatpgcollege.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Rawat PG Girls College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="SKIT Jaipur" data-domain="skit.ac.in">
+                                        <img src="college/skit.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>SKIT Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="St. Xavier's College Jaipur" data-domain="stxaviersjaipur.org">
+                                        <img src="college/stxaviersjaipur.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>St. Xavier's College Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Subodh College" data-domain="subodhpgcollege.com">
+                                        <img src="college/subodhpgcollege.com.png" alt="" onerror="this.style.display='none'">
+                                        <span>Subodh College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Suresh Gyan Vihar University" data-domain="gyanvihar.org">
+                                        <img src="college/gyanvihar.org.png" alt="" onerror="this.style.display='none'">
+                                        <span>Suresh Gyan Vihar University</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Tagore Engineering College" data-domain="tagoreengineering.ac.in">
+                                        <img src="college/tagoreengineering.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Tagore Engineering College</span>
+                                    </div>
+                                    <div class="custom-option" data-value="University of Engineering & Management, Jaipur" data-domain="uem.edu.in">
+                                        <img src="college/uem.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>University of Engineering & Management, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="University of Rajasthan" data-domain="uniraj.ac.in">
+                                        <img src="college/uniraj.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>University of Rajasthan</span>
+                                    </div>
+                                    <div class="custom-option" data-value="University of Technology, Jaipur" data-domain="uot.edu.in">
+                                        <img src="college/uot.edu.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>University of Technology, Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Vivekananda Global University" data-domain="vgu.ac.in">
+                                        <img src="college/vgu.ac.in.png" alt="" onerror="this.style.display='none'">
+                                        <span>Vivekananda Global University</span>
+                                    </div>
+                                    <div class="custom-optgroup">Other</div>
+                                    <div class="custom-option" data-value="Other Jaipur College" data-domain="">
+                                        <span style="font-size:1.2rem; margin-right:4px;">🏛️</span>
+                                        <span>Other College in Jaipur</span>
+                                    </div>
+                                    <div class="custom-option" data-value="Out of Jaipur" data-domain="">
+                                        <span style="font-size:1.2rem; margin-right:4px;">🌍</span>
+                                        <span>College Outside Jaipur</span>
+                                    </div>
 
-                                <optgroup label="Deemed / Private Universities">
-                                    <option value="UEM Jaipur" data-domain="uem.edu.in">UEM Jaipur (Host College)
-                                    </option>
-                                    <option value="Manipal University Jaipur" data-domain="jaipur.manipal.edu">Manipal
-                                        University Jaipur</option>
-                                    <option value="LNMIIT Jaipur" data-domain="lnmiit.ac.in">LNMIIT Jaipur</option>
-                                    <option value="Jaipur National University" data-domain="jnujaipur.ac.in">Jaipur
-                                        National University (JNU)</option>
-                                    <option value="Amity University Rajasthan" data-domain="jaipur.amity.edu">Amity
-                                        University Rajasthan</option>
-                                    <option value="IIS University Jaipur" data-domain="iisuniv.ac.in">IIS University
-                                        (Deemed)</option>
-                                    <option value="Vivekananda Global University" data-domain="vgu.ac.in">Vivekananda
-                                        Global University</option>
-                                </optgroup>
-
-                                <optgroup label="Autonomous Colleges / Universities">
-                                    <option value="Poornima University" data-domain="poornima.edu.in">Poornima
-                                        University</option>
-                                    <option value="JECRC University" data-domain="jecrcuniversity.edu.in">JECRC
-                                        University</option>
-                                    <option value="Apex University" data-domain="apex.edu.in">Apex University</option>
-                                    <option value="University of Rajasthan" data-domain="uniraj.ac.in">University of
-                                        Rajasthan</option>
-                                </optgroup>
-
-                                <optgroup label="Engineering Colleges">
-                                    <option value="Arya College of Engineering" data-domain="aryacollege.in">Arya
-                                        College of Engineering</option>
-                                    <option value="SKIT Jaipur" data-domain="skit.ac.in">SKIT (Swami Keshvanand)
-                                    </option>
-                                    <option value="Global Institute of Technology" data-domain="git.ac.in">Global
-                                        Institute of Technology</option>
-                                    <option value="Poornima College of Engineering" data-domain="poornima.org">Poornima
-                                        College of Engineering</option>
-                                    <option value="Rajasthan College of Engineering" data-domain="rce.ac.in">Rajasthan
-                                        College of Engineering</option>
-                                    <option value="Tagore Engineering College" data-domain="tagoreengineering.ac.in">
-                                        Tagore Engineering College</option>
-                                    <option value="Jaipur Engineering College" data-domain="jecjaipuroncampus.in">Jaipur
-                                        Engineering College</option>
-                                </optgroup>
-
-                                <optgroup label="Other">
-                                    <option value="Other Jaipur College" data-domain="">Other College in Jaipur</option>
-                                    <option value="Out of Jaipur" data-domain="">College Outside Jaipur</option>
-                                </optgroup>
-                            </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Phone Number -->
+                    <div class="form-group">
+                        <label class="form-label" for="regPhone">Phone Number</label>
+                        <input class="form-input" type="tel" id="regPhone" placeholder="10-digit mobile number"
+                            pattern="[0-9]{10}" required />
+                    </div>
+
 
                     <!-- Photo upload -->
                     <div class="form-group">
@@ -651,30 +825,116 @@
 
         /* College → domain map for logo (Google Favicon API) */
         const COLLEGE_DOMAINS = {
-            "MNIT Jaipur": "mnit.ac.in",
-            "UEM Jaipur": "uem.edu.in",
-            "Manipal University Jaipur": "jaipur.manipal.edu",
-            "LNMIIT Jaipur": "lnmiit.ac.in",
-            "Jaipur National University": "jnujaipur.ac.in",
-            "Amity University Rajasthan": "jaipur.amity.edu",
-            "IIS University Jaipur": "iisuniv.ac.in",
-            "Vivekananda Global University": "vgu.ac.in",
-            "Poornima University": "poornima.edu.in",
-            "JECRC University": "jecrcuniversity.edu.in",
+            "ARCH Academy of Design": "archedu.org",
+            "Amity University, Jaipur": "jaipur.amity.edu",
             "Apex University": "apex.edu.in",
-            "University of Rajasthan": "uniraj.ac.in",
-            "Arya College of Engineering": "aryacollege.in",
-            "SKIT Jaipur": "skit.ac.in",
+            "Arya Group Of Colleges": "aryacollege.in",
+            "Baldev Ram Mirdha Institute of Technology": "brmit.in",
+            "Biyani Group of Colleges": "biyanicolleges.org",
+            "Commerce College, Jaipur": "uniraj.ac.in",
+            "Compucom Institute of Information Technology and Management": "compucom.co.in",
+            "Dr. Bhimrao Ambedkar Law University": "alujaipur.ac.in",
             "Global Institute of Technology": "git.ac.in",
+            "HCM Rajasthan State Institute of Public Administration": "hcmripa.gov.in",
+            "Haridev Joshi University of Journalism and Mass Communication": "hju.ac.in",
+            "Homoeopathy University": "homoeopathyuniversityinfo.org",
+            "ICFAI University, Jaipur": "iujaipur.edu.in",
+            "IHM Jaipur": "ihmjaipur.com",
+            "IIS University": "iisuniv.ac.in",
+            "IPS Business School": "ipsedu.in",
+            "Indian Institute of Crafts and Design": "iicd.ac.in",
+            "JECRC University": "jecrcuniversity.edu.in",
+            "JK Lakshmipat University": "jklu.edu.in",
+            "Jagadguru Ramanandacharya Rajasthan Sanskrit University": "jrrsanskrituniversity.ac.in",
+            "Jaipur Engineering College": "jecjaipuroncampus.in",
+            "Jaipur National University": "jnujaipur.ac.in",
+            "LNMIIT Jaipur": "lnmiit.ac.in",
+            "Lal Bahadur Shastri College, Jaipur": "lbscollege.com",
+            "MNIT Jaipur": "mnit.ac.in",
+            "Maharaja College, Jaipur": "universitymaharajacollege.ac.in",
+            "Manipal University Jaipur": "jaipur.manipal.edu",
+            "NIMS University": "nimsuniversity.org",
+            "National Institute of Agricultural Marketing": "ccsniam.gov.in",
+            "National Institute of Ayurveda": "nia.nic.in",
+            "Pareek College": "pareekcollege.com",
+            "Picasso Animation College": "picasso.co.in",
             "Poornima College of Engineering": "poornima.org",
+            "Poornima University": "poornima.edu.in",
+            "Pratap University": "pratap.edu.in",
+            "R. A. Podar Institute of Management": "rapim.ac.in",
+            "Rajasthan College": "universityrajasthancollege.ac.in",
             "Rajasthan College of Engineering": "rce.ac.in",
+            "Rajasthan Pharmacy College": "rpcjaipur.com",
+            "Rawat PG Girls College": "rawatpgcollege.com",
+            "SKIT Jaipur": "skit.ac.in",
+            "St. Xavier's College Jaipur": "stxaviersjaipur.org",
+            "Subodh College": "subodhpgcollege.com",
+            "Suresh Gyan Vihar University": "gyanvihar.org",
             "Tagore Engineering College": "tagoreengineering.ac.in",
-            "Jaipur Engineering College": "jecjaipuroncampus.in"
+            "University of Engineering & Management, Jaipur": "uem.edu.in",
+            "University of Rajasthan": "uniraj.ac.in",
+            "University of Technology, Jaipur": "uot.edu.in",
+            "Vivekananda Global University": "vgu.ac.in"
         };
 
         function getCollegeLogo(name) {
             const d = COLLEGE_DOMAINS[name];
-            return d ? `https://www.google.com/s2/favicons?sz=64&domain=${d}` : '';
+            return d ? `college/${d}.png` : '';
+        }
+
+        /* ---- Custom Dropdown Logic ---- */
+        const customSelect = document.getElementById('customCollegeSelect');
+        if (customSelect) {
+            const trigger = customSelect.querySelector('.custom-select__trigger');
+            const options = customSelect.querySelectorAll('.custom-option');
+            const hiddenInput = document.getElementById('regCollege');
+            const label = document.getElementById('customSelectLabel');
+
+            // Toggle dropdown
+            trigger.addEventListener('click', function (e) {
+                customSelect.classList.toggle('open');
+                e.stopPropagation();
+            });
+
+            // Select option
+            options.forEach(option => {
+                option.addEventListener('click', function () {
+                    // Remove selected from all
+                    options.forEach(opt => opt.classList.remove('selected'));
+
+                    // Add selected to clicked
+                    this.classList.add('selected');
+
+                    // Update hidden input
+                    const val = this.getAttribute('data-value');
+                    hiddenInput.value = val;
+
+                    // Update trigger UI
+                    const img = this.querySelector('img');
+                    const text = this.querySelector('span').textContent;
+
+                    if (img) {
+                        label.innerHTML = `<img src="${img.src}" alt=""> <span>${text}</span>`;
+                        // Update default domain if they change college after a previous auto-fill
+                        const domain = this.getAttribute('data-domain');
+                        if (domain && domain !== 'gmail.com') {
+                            const emailInput = document.getElementById('regEmail');
+                            if (emailInput && !emailInput.value) emailInput.value = '@' + domain;
+                        }
+                    } else {
+                        label.innerHTML = this.innerHTML;
+                    }
+
+                    customSelect.classList.remove('open');
+                });
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!customSelect.contains(e.target)) {
+                    customSelect.classList.remove('open');
+                }
+            });
         }
 
         /* ---- Auth guard ---- */
@@ -824,12 +1084,14 @@
         window.handleRegister = async () => {
             const name = document.getElementById('regName').value.trim();
             const college = document.getElementById('regCollege').value;
+            const phone = document.getElementById('regPhone').value.trim();
             const errEl = document.getElementById('regError');
 
             errEl.classList.remove('show');
 
             if (!name) { showRegError('Please enter your full name.'); return; }
             if (!college) { showRegError('Please select your college.'); return; }
+            if (!phone || phone.length < 10) { showRegError('Please enter a valid 10-digit phone number.'); return; }
 
             const btn = document.getElementById('registerBtn');
             btn.disabled = true;
@@ -838,18 +1100,29 @@
             const identifier = currentUser.email || currentUser.uid;
 
             try {
-                /* Duplicate check */
-                const q = query(collection(db, 'participants'), where('email', '==', identifier));
-                const snap = await getDocs(q);
+                /* Duplicate check by email */
+                const qEmail = query(collection(db, 'participants'), where('email', '==', identifier));
+                const snapEmail = await getDocs(qEmail);
 
-                if (!snap.empty) {
-                    const d = snap.docs[0].data();
+                if (!snapEmail.empty) {
+                    const d = snapEmail.docs[0].data();
                     renderGatePass(d.name, d.college, d.gatePassID, d.photo || null);
                     showRegisteredState(d.gatePassID);
                     btn.disabled = false;
                     btn.innerHTML = '✦ Get My Gate Pass';
                     return;
                 }
+
+                /* Duplicate check by phone */
+                const qPhone = query(collection(db, 'participants'), where('phone', '==', phone));
+                const snapPhone = await getDocs(qPhone);
+                if (!snapPhone.empty) {
+                    showRegError('This phone number is already registered.');
+                    btn.disabled = false;
+                    btn.innerHTML = '✦ Get My Gate Pass';
+                    return;
+                }
+
 
                 /* Generate Gate Pass ID */
                 const gatePassID = 'AARO-' + Math.floor(10000 + Math.random() * 90000);
@@ -858,6 +1131,7 @@
                 const docData = {
                     name: name,
                     college: college,
+                    phone: phone,
                     email: identifier,
                     gatePassID: gatePassID,
                     timestamp: serverTimestamp()
@@ -938,255 +1212,29 @@
             el.classList.add('show');
         }
 
-        /* ---- Download gate pass (high-quality canvas renderer) ---- */
+        /* ---- Download gate pass (match exactly to visual UI) ---- */
         window.downloadPass = async () => {
             const btn = document.getElementById('downloadBtn');
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Preparing...';
             try {
                 const passID = document.getElementById('passID').textContent;
-                const passName = document.getElementById('passName').textContent;
-                const passCollege = document.getElementById('passCollege').textContent;
-                const photoSrc = document.getElementById('passPhotoImg').src || null;
-                const hasPhoto = document.getElementById('passPhotoImg').style.display !== 'none' && photoSrc;
+                // Add a small delay to ensure any images/fonts are fully rendered before capturing
+                await new Promise(r => setTimeout(r, 100));
 
-                // Get QR as image
-                const qrImg = document.querySelector('#qrcode img') || document.querySelector('#qrcode canvas');
-
-                const S = 3; // scale factor for high DPI
-                const W = 520, H = 300; // logical dimensions
-                const CW = W * S, CH = H * S;
-
-                const canvas = document.createElement('canvas');
-                canvas.width = CW; canvas.height = CH;
-                const ctx = canvas.getContext('2d');
-                ctx.scale(S, S);
-
-                // ── Background gradient ──
-                const bgGrad = ctx.createLinearGradient(0, 0, W, H);
-                bgGrad.addColorStop(0, '#0d0020');
-                bgGrad.addColorStop(0.5, '#110030');
-                bgGrad.addColorStop(1, '#0d0025');
-                ctx.fillStyle = bgGrad;
-                ctx.fillRect(0, 0, W, H);
-
-                // Subtle grid pattern
-                ctx.strokeStyle = 'rgba(212,165,32,0.04)';
-                ctx.lineWidth = 0.5;
-                for (let x = 0; x < W; x += 18) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-                for (let y = 0; y < H; y += 18) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-
-                // Gold border
-                const borderGrad = ctx.createLinearGradient(0, 0, W, H);
-                borderGrad.addColorStop(0, 'rgba(212,165,32,0.8)');
-                borderGrad.addColorStop(0.5, 'rgba(255,215,80,1)');
-                borderGrad.addColorStop(1, 'rgba(212,165,32,0.8)');
-                ctx.strokeStyle = borderGrad;
-                ctx.lineWidth = 2;
-                ctx.strokeRect(1, 1, W - 2, H - 2);
-
-                // Inner border
-                ctx.strokeStyle = 'rgba(212,165,32,0.15)';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(8, 8, W - 16, H - 16);
-
-                // Corner accents
-                const cornerLen = 16;
-                ctx.strokeStyle = 'rgba(212,165,32,0.7)';
-                ctx.lineWidth = 1.5;
-                [[12, 12], [W - 12, 12], [12, H - 12], [W - 12, H - 12]].forEach(([cx, cy], i) => {
-                    const dx = i % 2 === 0 ? 1 : -1, dy = i < 2 ? 1 : -1;
-                    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + dx * cornerLen, cy); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy + dy * cornerLen); ctx.stroke();
+                const c = await html2canvas(document.getElementById('gatePassCard'), {
+                    backgroundColor: '#0d0020',
+                    scale: 3,
+                    useCORS: true,
+                    logging: false
                 });
-
-                // ── Header ──
-                ctx.textAlign = 'left';
-                ctx.font = 'bold 22px serif';
-                ctx.fillStyle = '#ffffff';
-                ctx.fillText('AAROHAN', 22, 40);
-
-                ctx.font = '8px sans-serif';
-                ctx.fillStyle = 'rgba(212,165,32,0.7)';
-                ctx.letterSpacing = '3px';
-                ctx.fillText('1.0  ·  U E M  J A I P U R', 22, 55);
-
-                // Founding badge
-                ctx.font = 'bold 8px sans-serif';
-                const badgeTxt = '⭐ Founding Edition';
-                const btw = ctx.measureText(badgeTxt).width + 12;
-                const btx = W - btw - 20;
-                ctx.fillStyle = 'rgba(212,165,32,0.12)';
-                ctx.strokeStyle = 'rgba(212,165,32,0.35)';
-                ctx.lineWidth = 0.8;
-                ctx.beginPath(); ctx.roundRect(btx, 28, btw, 18, 3); ctx.fill(); ctx.stroke();
-                ctx.fillStyle = 'rgba(212,165,32,0.9)';
-                ctx.textAlign = 'center';
-                ctx.fillText(badgeTxt, btx + btw / 2, 40);
-
-                // ── Divider ──
-                const divGrad = ctx.createLinearGradient(22, 0, W - 22, 0);
-                divGrad.addColorStop(0, 'rgba(212,165,32,0)');
-                divGrad.addColorStop(0.3, 'rgba(212,165,32,0.5)');
-                divGrad.addColorStop(0.7, 'rgba(212,165,32,0.5)');
-                divGrad.addColorStop(1, 'rgba(212,165,32,0)');
-                ctx.strokeStyle = divGrad;
-                ctx.lineWidth = 0.8;
-                ctx.beginPath(); ctx.moveTo(22, 68); ctx.lineTo(W - 22, 68); ctx.stroke();
-
-                // ── Body layout ──
-                const bodyY = 82;
-                let infoX = 22;
-
-                // Photo circle (if available)
-                const photoSize = 72;
-                const photoX = infoX;
-                const photoY = bodyY;
-
-                const drawInfoFields = (startX) => {
-                    ctx.textAlign = 'left';
-                    let y = bodyY;
-
-                    // Name field
-                    ctx.font = '7px sans-serif';
-                    ctx.fillStyle = 'rgba(212,165,32,0.5)';
-                    ctx.fillText('PARTICIPANT NAME', startX, y);
-                    ctx.font = 'bold 13px sans-serif';
-                    ctx.fillStyle = '#f5f5f5';
-                    ctx.fillText(passName, startX, y + 16);
-
-                    // College field
-                    y += 36;
-                    ctx.font = '7px sans-serif';
-                    ctx.fillStyle = 'rgba(212,165,32,0.5)';
-                    ctx.fillText('COLLEGE', startX, y);
-                    ctx.font = '11px sans-serif';
-                    ctx.fillStyle = '#ddd';
-                    // Word wrap college name if long
-                    const maxW = 220;
-                    let collegeLine = passCollege;
-                    if (ctx.measureText(collegeLine).width > maxW) {
-                        const words = collegeLine.split(' ');
-                        let line = ''; let lines = [];
-                        words.forEach(w => {
-                            const test = line + (line ? ' ' : '') + w;
-                            if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
-                            else line = test;
-                        });
-                        lines.push(line);
-                        lines.forEach((l, i) => ctx.fillText(l, startX, y + 14 + (i * 13)));
-                    } else {
-                        ctx.fillText(collegeLine, startX, y + 14);
-                    }
-
-                    // Pass ID field
-                    y += 40;
-                    ctx.font = '7px sans-serif';
-                    ctx.fillStyle = 'rgba(212,165,32,0.5)';
-                    ctx.fillText('GATE PASS ID', startX, y);
-                    ctx.font = 'bold 15px monospace';
-                    const pidGrad = ctx.createLinearGradient(startX, 0, startX + 120, 0);
-                    pidGrad.addColorStop(0, '#d4a520');
-                    pidGrad.addColorStop(1, '#ffd700');
-                    ctx.fillStyle = pidGrad;
-                    ctx.fillText(passID, startX, y + 17);
-                };
-
-                // Draw photo if available
-                const drawPassWithOptionalPhoto = async () => {
-                    let infoStartX = infoX;
-
-                    if (hasPhoto) {
-                        await new Promise(resolve => {
-                            const img = new Image();
-                            img.onload = () => {
-                                // clip circle
-                                ctx.save();
-                                ctx.beginPath();
-                                ctx.arc(photoX + photoSize / 2, photoY + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
-                                ctx.clip();
-                                ctx.drawImage(img, photoX, photoY, photoSize, photoSize);
-                                ctx.restore();
-                                // circle border
-                                ctx.beginPath();
-                                ctx.arc(photoX + photoSize / 2, photoY + photoSize / 2, photoSize / 2, 0, Math.PI * 2);
-                                ctx.strokeStyle = 'rgba(212,165,32,0.6)';
-                                ctx.lineWidth = 2;
-                                ctx.stroke();
-                                resolve();
-                            };
-                            img.onerror = resolve;
-                            img.crossOrigin = 'anonymous';
-                            img.src = photoSrc;
-                        });
-                        infoStartX = photoX + photoSize + 16;
-                    }
-
-                    drawInfoFields(infoStartX);
-
-                    // ── QR Code ──
-                    const qrSize = 90;
-                    const qrX = W - qrSize - 22;
-                    const qrY = bodyY - 4;
-
-                    if (qrImg) {
-                        await new Promise(resolve => {
-                            const qi = new Image();
-                            qi.onload = () => {
-                                // White bg
-                                ctx.fillStyle = '#fff';
-                                ctx.fillRect(qrX - 4, qrY - 4, qrSize + 8, qrSize + 8);
-                                ctx.drawImage(qi, qrX, qrY, qrSize, qrSize);
-                                ctx.font = '7px sans-serif';
-                                ctx.fillStyle = 'rgba(212,165,32,0.6)';
-                                ctx.textAlign = 'center';
-                                ctx.fillText('Scan to Verify', qrX + qrSize / 2, qrY + qrSize + 12);
-                                resolve();
-                            };
-                            qi.onerror = resolve;
-                            qi.crossOrigin = 'anonymous';
-                            qi.src = qrImg.src || qrImg.toDataURL();
-                        });
-                    }
-
-                    // ── Divider ──
-                    ctx.strokeStyle = divGrad;
-                    ctx.lineWidth = 0.8;
-                    ctx.beginPath(); ctx.moveTo(22, H - 40); ctx.lineTo(W - 22, H - 40); ctx.stroke();
-
-                    // ── Footer ──
-                    ctx.textAlign = 'center';
-                    ctx.font = 'italic 8px serif';
-                    ctx.fillStyle = 'rgba(212,165,32,0.5)';
-                    ctx.fillText('Aarohan 1.0 · The Beginning of a Legacy', W / 2, H - 26);
-                    ctx.font = '7.5px sans-serif';
-                    ctx.fillStyle = 'rgba(200,200,200,0.45)';
-                    ctx.fillText('University of Engineering & Management, Jaipur  ·  Valid for Single Entry', W / 2, H - 14);
-
-                    // Download
-                    const link = document.createElement('a');
-                    link.download = `Aarohan1-GatePass-${passID}.png`;
-                    link.href = canvas.toDataURL('image/png', 1.0);
-                    link.click();
-                };
-
-                await drawPassWithOptionalPhoto();
-
+                const link = document.createElement('a');
+                link.download = `Aarohan1-GatePass-${passID}.png`;
+                link.href = c.toDataURL('image/png', 1.0);
+                link.click();
             } catch (e) {
-                // Fallback to html2canvas
-                try {
-                    const passID = document.getElementById('passID').textContent;
-                    const c = await html2canvas(document.getElementById('gatePassCard'), {
-                        backgroundColor: '#0d0020', scale: 3, useCORS: true, logging: false
-                    });
-                    const link = document.createElement('a');
-                    link.download = `Aarohan1-GatePass-${passID}.png`;
-                    link.href = c.toDataURL('image/png', 1.0);
-                    link.click();
-                } catch (e2) {
-                    alert('Download failed. Please take a screenshot instead.');
-                    console.error(e2);
-                }
+                alert('Download failed. Please take a screenshot instead.');
+                console.error(e);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '⬇ Download Gate Pass';
@@ -1212,52 +1260,86 @@
 
     <!-- FOOTER -->
     <footer style="padding: 4rem 1.5rem; background-color: var(--bg-card, #030305); position: relative; z-index: 10;">
-        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem; padding-bottom: 2rem;">
-            
-            <div style="flex: 1; min-width: 250px; text-align: center; border-right: 1px solid rgba(212,165,32,0.2); padding-right: 2rem;">
-                <span class="footer-logo" style="font-family:'Cinzel',serif; font-size:1.5rem; font-weight:700; color:var(--gold, #d4a520);">AAROHAN 1.0</span>
+        <div
+            style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 3rem; padding-bottom: 2rem;">
+
+            <div
+                style="flex: 1; min-width: 250px; text-align: center; border-right: 1px solid rgba(212,165,32,0.2); padding-right: 2rem;">
+                <span class="footer-logo"
+                    style="font-family:'Cinzel',serif; font-size:1.5rem; font-weight:700; color:var(--gold, #d4a520);">AAROHAN
+                    1.0</span>
                 <div class="footer-ornament" style="margin: 0.5rem 0; color:var(--gold, #d4a520);">✦ ✦ ✦</div>
-                <p style="font-style:italic; font-family:'Playfair Display',serif; color: rgba(212, 165, 32, 0.8);">The Beginning of a Legacy</p>
-                <p style="margin-top:0.5rem; font-size:0.85rem; color: rgba(255,255,255,0.6);">University of Engineering &amp; Management, Jaipur</p>
+                <p style="font-style:italic; font-family:'Playfair Display',serif; color: rgba(212, 165, 32, 0.8);">The
+                    Beginning of a Legacy</p>
+                <p style="margin-top:0.5rem; font-size:0.85rem; color: rgba(255,255,255,0.6);">University of Engineering
+                    &amp; Management, Jaipur</p>
             </div>
-            
+
             <div style="flex: 1; min-width: 250px; text-align: center;">
-                <h4 style="color: var(--gold, #d4a520); margin-bottom: 1.2rem; font-family: 'Cinzel', serif; letter-spacing: 0.1em; font-size: 1.1rem; text-transform: uppercase;">Contact Us</h4>
+                <h4
+                    style="color: var(--gold, #d4a520); margin-bottom: 1.2rem; font-family: 'Cinzel', serif; letter-spacing: 0.1em; font-size: 1.1rem; text-transform: uppercase;">
+                    Contact Us</h4>
                 <p style="margin-bottom: 0.8rem; font-size: 0.95rem;">
-                    <strong style="color: rgba(255,255,255,0.9);">Mail:</strong><br> <a href="mailto:atranguemj@gmail.com" style="color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--gold, #d4a520)'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">atranguemj@gmail.com</a>
+                    <strong style="color: rgba(255,255,255,0.9);">Mail:</strong><br> <a
+                        href="mailto:atranguemj@gmail.com"
+                        style="color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s;"
+                        onmouseover="this.style.color='var(--gold, #d4a520)'"
+                        onmouseout="this.style.color='rgba(255,255,255,0.7)'">atranguemj@gmail.com</a>
                 </p>
                 <div style="margin-bottom: 0.5rem; font-size: 0.95rem;">
                     <strong style="color: rgba(255,255,255,0.9);">Phone:</strong>
                     <div style="color: rgba(255,255,255,0.7); margin-top: 0.4rem;">
-                        <div style="margin-bottom: 0.3rem;">Soumik Chaudhuri: <a href="tel:9475858070" style="color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--gold, #d4a520)'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">9475858070</a></div>
-                        <div>Arka Mahajan: <a href="tel:7047387377" style="color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--gold, #d4a520)'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">7047387377</a></div>
+                        <div style="margin-bottom: 0.3rem;">Soumik Chaudhuri: <a href="tel:9475858070"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s;"
+                                onmouseover="this.style.color='var(--gold, #d4a520)'"
+                                onmouseout="this.style.color='rgba(255,255,255,0.7)'">9475858070</a></div>
+                        <div>Arka Mahajan: <a href="tel:7047387377"
+                                style="color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s;"
+                                onmouseover="this.style.color='var(--gold, #d4a520)'"
+                                onmouseout="this.style.color='rgba(255,255,255,0.7)'">7047387377</a></div>
                     </div>
                 </div>
             </div>
 
             <div style="flex: 1; min-width: 200px; text-align: center;">
-                <h4 style="color: var(--gold, #d4a520); margin-bottom: 1.2rem; font-family: 'Cinzel', serif; letter-spacing: 0.1em; font-size: 1.1rem; text-transform: uppercase;">Follow Us</h4>
+                <h4
+                    style="color: var(--gold, #d4a520); margin-bottom: 1.2rem; font-family: 'Cinzel', serif; letter-spacing: 0.1em; font-size: 1.1rem; text-transform: uppercase;">
+                    Follow Us</h4>
                 <div style="display: flex; gap: 1.2rem; align-items: center; justify-content: center;">
-                    <a href="https://www.instagram.com/atrang_uemj_/" target="_blank" style="color: rgba(255,255,255,0.7); transition: color 0.3s, transform 0.3s; display: inline-block; transform-origin: center;" onmouseover="this.style.color='var(--gold, #d4a520)'; this.style.transform='scale(1.1) translateY(-2px)'" onmouseout="this.style.color='rgba(255,255,255,0.7)'; this.style.transform='scale(1) translateY(0)'" title="Instagram">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <a href="https://www.instagram.com/atrang_uemj_/" target="_blank"
+                        style="color: rgba(255,255,255,0.7); transition: color 0.3s, transform 0.3s; display: inline-block; transform-origin: center;"
+                        onmouseover="this.style.color='var(--gold, #d4a520)'; this.style.transform='scale(1.1) translateY(-2px)'"
+                        onmouseout="this.style.color='rgba(255,255,255,0.7)'; this.style.transform='scale(1) translateY(0)'"
+                        title="Instagram">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                             <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                         </svg>
                     </a>
-                    <a href="https://www.youtube.com/channel/UC_F8-WiuRnMFBxbIEmr9UDg" target="_blank" style="color: rgba(255,255,255,0.7); transition: color 0.3s, transform 0.3s; display: inline-block; transform-origin: center;" onmouseover="this.style.color='var(--gold, #d4a520)'; this.style.transform='scale(1.1) translateY(-2px)'" onmouseout="this.style.color='rgba(255,255,255,0.7)'; this.style.transform='scale(1) translateY(0)'" title="YouTube">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25z"></path>
+                    <a href="https://www.youtube.com/channel/UC_F8-WiuRnMFBxbIEmr9UDg" target="_blank"
+                        style="color: rgba(255,255,255,0.7); transition: color 0.3s, transform 0.3s; display: inline-block; transform-origin: center;"
+                        onmouseover="this.style.color='var(--gold, #d4a520)'; this.style.transform='scale(1.1) translateY(-2px)'"
+                        onmouseout="this.style.color='rgba(255,255,255,0.7)'; this.style.transform='scale(1) translateY(0)'"
+                        title="YouTube">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25z">
+                            </path>
                             <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
                         </svg>
                     </a>
                 </div>
             </div>
-            
+
         </div>
-        
+
         <div style="border-top: 1px solid rgba(212,165,32,0.1); padding-top: 1.5rem; text-align: center;">
-            <p style="font-size:0.8rem; color: rgba(255,255,255,0.5); margin: 0; font-family: 'Space Grotesk', sans-serif;">© 2026 UEM Jaipur. All rights reserved.</p>
+            <p
+                style="font-size:0.8rem; color: rgba(255,255,255,0.5); margin: 0; font-family: 'Space Grotesk', sans-serif;">
+                © 2026 UEM Jaipur. All rights reserved.</p>
         </div>
     </footer>
 
