@@ -101,6 +101,44 @@ template = Template("""<!DOCTYPE html>
             clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
         }
 
+        /* ===== POSTER SECTION ===== */
+        .poster-section {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 2rem 0;
+        }
+
+        .poster-frame {
+            position: relative;
+            border: 1px solid rgba(212, 165, 32, 0.2);
+            border-top: 3px solid;
+            border-image: var(--grad-gold) 1;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(212, 165, 32, 0.18), 0 0 120px rgba(180, 79, 207, 0.1);
+            transition: var(--transition);
+        }
+
+        .poster-frame:hover {
+            box-shadow: 0 0 80px rgba(212, 165, 32, 0.3), 0 0 160px rgba(180, 79, 207, 0.15);
+        }
+
+        .poster-frame img {
+            width: 100%;
+            max-height: 500px;
+            display: block;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .poster-glow {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, rgba(3, 3, 5, 0.7) 100%);
+            pointer-events: none;
+        }
+
         /* ===== DETAILS CONTENT ===== */
         .band-content {
             position: relative;
@@ -411,6 +449,14 @@ template = Template("""<!DOCTYPE html>
         </div>
     </div>
 
+    <!-- ===== POSTER SECTION ===== -->
+    <div class="poster-section">
+        <div class="poster-frame">
+            <img src="${image}" alt="${title} — Aarohan 1.0 Poster" />
+            <div class="poster-glow"></div>
+        </div>
+    </div>
+
     <!-- ===== DETAIL CARDS GRID ===== -->
     <div class="band-content">
         <!-- About -->
@@ -699,6 +745,7 @@ events_data = [
         "title": "Solo Singing",
         "title_escaped": "Solo Singing",
         "icon": "🎤",
+        "image": "Events/solo singing.png",
         "description": "One voice. One story. Let your vocals carve silence into emotion on the grandest stage of UEM Jaipur.",
         "duration": "3–5 Minutes",
         "members": "Solo",
@@ -712,6 +759,7 @@ events_data = [
         "title": "Solo Dance",
         "title_escaped": "Solo Dance",
         "icon": "💃",
+        "image": "Events/solo dnace.png",
         "description": "Classical grace or contemporary fire — let your body be the voice that speaks without words.",
         "duration": "3–6 Minutes",
         "members": "Solo",
@@ -725,6 +773,7 @@ events_data = [
         "title": "Group Dance",
         "title_escaped": "Group Dance",
         "icon": "🕺",
+        "image": "Events/group dance.png",
         "description": "Synchronised energy, shared rhythm, collective expression — bring your crew and own the floor together.",
         "duration": "5–10 Minutes",
         "members": "4–15 Members",
@@ -738,6 +787,7 @@ events_data = [
         "title": "T-Shirt Painting",
         "title_escaped": "T-Shirt Painting",
         "icon": "🎨",
+        "image": "Events/tshirt painting.png",
         "description": "A canvas that breathes. Paint your story on fabric and wear your art with pride at Aarohan 1.0.",
         "duration": "60 Minutes",
         "members": "1–2 Members",
@@ -751,6 +801,7 @@ events_data = [
         "title": "Nukkad Natak",
         "title_escaped": "Nukkad Natak",
         "icon": "🎭",
+        "image": "Events/nukkad natak.png",
         "description": "Street theatre at its most raw and powerful. No props needed — just passion, truth, and collective voice.",
         "duration": "10–15 Minutes",
         "members": "5–20 Members",
