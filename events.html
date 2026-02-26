@@ -632,26 +632,30 @@
         } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         // ================================================================
-        //  EMAIL — Python SMTP Server
-        //  The frontend POSTs registration data to the local Python server
-        //  (email_server.py) which sends the email via Gmail SMTP.
+        //  EMAIL — Google Apps Script Web App
+        //  Runs on Google's servers, sends via Gmail. Works on GitHub Pages.
         //
-        //  SETUP: run `python email_server.py` in a terminal before using
-        //  the registration page. Server listens at http://localhost:5000
+        //  SETUP (one-time):
+        //   1. Go to https://script.google.com → New Project
+        //   2. Paste the contents of email_appscript.js
+        //   3. Deploy → New Deployment → Web App
+        //      Execute as: Me | Access: Anyone
+        //   4. Copy the Web App URL and paste it below as APPS_SCRIPT_URL
         // ================================================================
-        const SMTP_SERVER_URL = 'http://localhost:5000/send-email';
+        const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
 
         /**
          * sendConfirmationEmail
-         * POSTs to the local Python SMTP server.
+         * POSTs to the Google Apps Script Web App → sends via Gmail.
          * Fails silently — never blocks the registration UI.
          */
         async function sendConfirmationEmail({ toEmail, toName, eventName, gatePassID, teamName, memberList }) {
-            if (!toEmail) return;
+            if (!toEmail || APPS_SCRIPT_URL.includes('YOUR_APPS_SCRIPT')) return;
             try {
-                await fetch(SMTP_SERVER_URL, {
+                await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'no-cors',   // Apps Script doesn't return CORS headers on POST
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({
                         to_email: toEmail,
                         to_name: toName,
@@ -662,8 +666,7 @@
                     })
                 });
             } catch (e) {
-                // Server not running or network error — silently skip
-                console.warn('[Email] Could not reach SMTP server:', e.message);
+                console.warn('[Email] Could not reach Apps Script:', e.message);
             }
         }
 
